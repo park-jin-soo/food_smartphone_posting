@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>채우미 맛집전용 원고 생성기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .section-title-with-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn-inline {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+            margin-left: 10px;
+            margin-top: 5px;
+        }
+
+        .copy-btn-inline:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .copy-btn-inline:active {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-reset:active {
+            transform: translateY(0);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 8px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 5px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .result-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .result-box strong,
+        .result-box .highlight {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .title-list {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .title-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            line-height: 1.5;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .title-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .title-item.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 15px;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .blog-url-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .blog-url-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .blog-url-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-crawl {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-crawl:hover {
+            background: #138496;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+        }
+
+        .btn-crawl:active {
+            transform: translateY(0);
+        }
+
+        .btn-crawl:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>채우미 맛집전용 원고 생성기</h1>
+        <p class="subtitle">네이버 블로그 검색 최적화 맛집 후기 작성 도구</p>
+
+        <div style="text-align: right; margin-bottom: 15px;">
+            <button class="btn-reset" onclick="resetAll()">초기화</button>
+        </div>
+
+        <div class="section" style="background: #fff3cd; border-left-color: #ffc107;">
+            <div class="section-title">0. API 키 설정</div>
+            <div class="warning" style="margin-bottom: 15px;">
+                <strong>⚠️ 중요:</strong> API 키는 안전하게 관리하세요. 다른 사람과 공유하지 마세요.
+            </div>
+            <div class="input-group">
+                <label>Gemini API 키</label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="width: 100%;">
+                    <button class="btn-crawl" onclick="toggleApiKeyVisibility()" style="width: 100%; padding: 10px; font-size: 13px;">보기/숨기기</button>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                <button class="btn btn-secondary" onclick="saveApiKey()" style="margin-top: 0;">API 키 저장</button>
+                <button class="btn btn-secondary" onclick="downloadConfig()" style="margin-top: 0;">설정 파일 다운로드</button>
+                <label class="btn btn-secondary" style="margin-top: 0; cursor: pointer; text-align: center;">
+                    설정 파일 불러오기
+                    <input type="file" id="configFileInput" accept=".json" style="display: none;" onchange="loadConfigFile(event)">
+                </label>
+            </div>
+            <div id="apiKeyStatus" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">1. 입력 데이터</div>
+            
+            <div class="input-group">
+                <label style="margin-bottom: 10px;">작성 시점 선택</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="afterVisit" name="visitType" value="after" checked>
+                        <label for="afterVisit">다녀온 후 작성</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="beforeVisit" name="visitType" value="before">
+                        <label for="beforeVisit">가기 전 작성 (체험단용)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>메인 키워드</label>
+                <input type="text" id="mainKeyword" placeholder="예: 강남 맛집, 홍대 맛집 등">
+            </div>
+
+            <div class="input-group">
+                <label>매장명</label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <input type="text" id="storeName" placeholder="예: 맛있는집, 고기집 등" style="width: 100%;">
+                    <button class="btn-crawl" onclick="autoCollectBlogPosts()" id="autoCollectBtn" style="width: 100%; padding: 12px; font-size: 14px;">자동 수집</button>
+                </div>
+                <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                    💡 매장명을 입력하고 "자동 수집" 버튼을 클릭하면 네이버 블로그 상위 3개 글이 자동으로 수집됩니다.
+                    <br>
+                    ⚠️ 자동 수집이 실패할 경우: 
+                    <button onclick="openNaverSearch()" style="background: #17a2b8; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 5px;">네이버 검색 열기</button>
+                    네이버 블로그 검색 결과 페이지에서 상위 3개 블로그 URL을 복사하여 아래 참고글 URL 입력란에 붙여넣고 "수집" 버튼을 클릭하세요.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>참고 블로그 글 1</label>
+                <div class="blog-url-group">
+                    <input type="text" id="blogUrl1" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
+                    <button class="btn-crawl" onclick="crawlBlogToTextarea(1)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
+                </div>
+                <textarea id="reference1" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>참고 블로그 글 2</label>
+                <div class="blog-url-group">
+                    <input type="text" id="blogUrl2" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
+                    <button class="btn-crawl" onclick="crawlBlogToTextarea(2)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
+                </div>
+                <textarea id="reference2" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>참고 블로그 글 3</label>
+                <div class="blog-url-group">
+                    <input type="text" id="blogUrl3" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
+                    <button class="btn-crawl" onclick="crawlBlogToTextarea(3)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
+                </div>
+                <textarea id="reference3" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>방문 일시/동행</label>
+                <input type="text" id="visitInfo" placeholder="예: 주말 저녁, 친구와">
+            </div>
+
+            <div class="input-group">
+                <label>주문 메뉴</label>
+                <input type="text" id="menu" placeholder="예: 삼겹살 2인분, 김치찌개">
+            </div>
+
+            <div class="input-group">
+                <label>맛/특징 메모</label>
+                <textarea id="tasteMemo" placeholder="예: 고기를 직원이 구워줌, 육즙이 많음, 밑반찬 명이나물 맛있음"></textarea>
+            </div>
+
+            <button class="btn" onclick="generateTitles()">제목 5개 생성하기</button>
+        </div>
+
+        <div id="titleSection" class="section hidden">
+            <div class="section-title">2. 제목 선택</div>
+            <div id="titleList" class="title-list"></div>
+            <div id="selectedTitleDisplay" class="hidden" style="margin-top: 15px; padding: 12px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #667eea;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #333;">선택된 제목:</div>
+                <div id="selectedTitleText" style="color: #555; font-size: 15px;"></div>
+            </div>
+            <button id="generateContentBtn" class="btn hidden" onclick="generateContent()" style="margin-top: 15px;">포스팅 원고 생성하기</button>
+            <button class="btn btn-secondary" onclick="resetTitles()" style="margin-top: 10px;">다시 생성하기</button>
+        </div>
+
+        <div id="contentSection" class="section hidden">
+            <div class="section-title section-title-with-button">
+                <span>3. 생성된 본문</span>
+                <button class="copy-btn-inline" onclick="copyContent()">생성된글 복사</button>
+            </div>
+            <div id="contentResult" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // Gemini 2.5 Flash 모델 사용 (절대 1.5 사용 금지)
+        // 정확한 모델명이 다르다면 여기를 수정하세요
+        const GEMINI_MODEL = 'gemini-2.5-flash';
+        
+        // API 키는 localStorage에서 로드하거나 사용자 입력으로 받음
+        let GEMINI_API_KEY = '';
+        
+        // API URL 생성 함수
+        function getGeminiApiUrl() {
+            if (!GEMINI_API_KEY) {
+                throw new Error('API 키가 설정되지 않았습니다. 먼저 API 키를 입력하고 저장해주세요.');
+            }
+            return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+        }
+        
+        // 페이지 로드 시 저장된 API 키 불러오기
+        function loadApiKey() {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) {
+                GEMINI_API_KEY = savedKey;
+                document.getElementById('apiKeyInput').value = savedKey;
+                showApiKeyStatus('저장된 API 키가 로드되었습니다.', 'success');
+            } else {
+                showApiKeyStatus('API 키를 입력하고 저장해주세요.', 'warning');
+            }
+        }
+        
+        // API 키 저장
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('API 키를 입력해주세요.');
+                return;
+            }
+            
+            if (!apiKey.startsWith('AIzaSy')) {
+                if (!confirm('API 키 형식이 올바르지 않을 수 있습니다. 계속하시겠습니까?')) {
+                    return;
+                }
+            }
+            
+            GEMINI_API_KEY = apiKey;
+            localStorage.setItem('gemini_api_key', apiKey);
+            showApiKeyStatus('API 키가 저장되었습니다.', 'success');
+        }
+        
+        // API 키 표시/숨기기 토글
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('apiKeyInput');
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+        
+        // API 키 상태 표시
+        function showApiKeyStatus(message, type) {
+            const statusDiv = document.getElementById('apiKeyStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = message;
+            statusDiv.style.background = type === 'success' ? '#d4edda' : '#fff3cd';
+            statusDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #ffc107';
+            statusDiv.style.color = type === 'success' ? '#155724' : '#856404';
+            
+            setTimeout(() => {
+                if (type === 'success') {
+                    statusDiv.style.display = 'none';
+                }
+            }, 3000);
+        }
+        
+        // 설정 파일 다운로드
+        function downloadConfig() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim() || GEMINI_API_KEY;
+            if (!apiKey) {
+                alert('저장할 API 키가 없습니다.');
+                return;
+            }
+            
+            const config = {
+                gemini_api_key: apiKey,
+                gemini_model: GEMINI_MODEL,
+                saved_at: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showApiKeyStatus('설정 파일이 다운로드되었습니다.', 'success');
+        }
+        
+        // 설정 파일 불러오기
+        function loadConfigFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    if (config.gemini_api_key) {
+                        GEMINI_API_KEY = config.gemini_api_key;
+                        document.getElementById('apiKeyInput').value = config.gemini_api_key;
+                        localStorage.setItem('gemini_api_key', config.gemini_api_key);
+                        showApiKeyStatus('설정 파일이 로드되었습니다.', 'success');
+                    } else {
+                        alert('설정 파일에 API 키가 없습니다.');
+                    }
+                } catch (error) {
+                    alert('설정 파일을 읽는 중 오류가 발생했습니다: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            // 파일 입력 초기화 (같은 파일을 다시 선택할 수 있도록)
+            event.target.value = '';
+        }
+        
+        // 페이지 로드 시 실행
+        window.addEventListener('DOMContentLoaded', function() {
+            loadApiKey();
+        });
+
+        // CORS 프록시 서버 목록 (여러 프록시를 시도하여 성공률 향상)
+        const CORS_PROXIES = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://cors-anywhere.herokuapp.com/',
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+
+        let selectedTitle = '';
+        let mainKeyword = '';
+        let experienceData = {};
+
+        async function generateTitles() {
+            const keyword = document.getElementById('mainKeyword').value.trim();
+            const storeName = document.getElementById('storeName').value.trim();
+            const ref1 = document.getElementById('reference1').value.trim();
+            const ref2 = document.getElementById('reference2').value.trim();
+            const ref3 = document.getElementById('reference3').value.trim();
+            const visitInfo = document.getElementById('visitInfo').value.trim();
+            const menu = document.getElementById('menu').value.trim();
+            const tasteMemo = document.getElementById('tasteMemo').value.trim();
+            const visitType = document.querySelector('input[name="visitType"]:checked').value;
+
+            if (!keyword) {
+                alert('메인 키워드를 입력해주세요.');
+                return;
+            }
+
+            mainKeyword = keyword;
+            experienceData = {
+                visitType: visitType,
+                storeName: storeName,
+                visitInfo: visitInfo,
+                menu: menu,
+                tasteMemo: tasteMemo,
+                ref1: ref1,
+                ref2: ref2,
+                ref3: ref3
+            };
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '제목 생성 중...';
+
+            const titleList = document.getElementById('titleList');
+            titleList.innerHTML = '<div class="loading">제목을 생성하고 있습니다. 잠시만 기다려주세요...</div>';
+            document.getElementById('titleSection').classList.remove('hidden');
+
+            try {
+                let prompt;
+                
+                if (visitType === 'before') {
+                    // 가기 전 작성 (체험단용)
+                    prompt = `# 역할 지정
+
+당신은 네이버 C-RANK와 DIA+ 로직을 꿰뚫고 있는 맛집 블로거입니다.
+
+# 프로세스 1: 제목 생성
+
+아래 조건에 맞춰 제목 5개를 먼저 제시하십시오.
+
+- 조건: 메인키워드와 세부 키워드를 섞어 검색과 클릭을 유도.
+- 출력: 번호와 제목만 출력하고 멈춤.
+
+메인 키워드: ${keyword}
+${storeName ? `매장명: ${storeName}` : ''}
+
+제목 5개를 생성해주세요.`;
+                } else {
+                    // 다녀온 후 작성
+                    prompt = `# 역할 지정
+
+당신은 네이버 블로그 검색 로직(C-RANK, DIA+)에 최적화된 맛집 전문 작가입니다.
+
+# 프로세스 1: 제목 생성
+
+아래 조건에 맞춰 제목 5개를 제시하십시오.
+
+- 조건: 메인키워드, 연관키워드, 롱테일키워드를 자연스럽게 조합할 것.
+- 목표: 검색 노출 및 클릭률 유도.
+- 출력: 번호와 제목만 깔끔하게 출력하고, 사용자의 선택을 기다리십시오. (본문 작성 금지)
+
+메인 키워드: ${keyword}
+${storeName ? `매장명: ${storeName}` : ''}
+
+제목 5개를 생성해주세요.`;
+                }
+
+                // API 키 확인
+                if (!GEMINI_API_KEY) {
+                    throw new Error('API 키가 설정되지 않았습니다. 먼저 API 키를 입력하고 저장해주세요.');
+                }
+
+                const response = await fetch(getGeminiApiUrl(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message || 'API 오류가 발생했습니다.');
+                }
+
+                const generatedText = data.candidates[0].content.parts[0].text;
+                const titles = parseTitles(generatedText);
+                
+                displayTitles(titles);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('제목 생성 중 오류가 발생했습니다: ' + error.message);
+                document.getElementById('titleSection').classList.add('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '제목 5개 생성하기';
+            }
+        }
+
+        function parseTitles(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const titles = [];
+            
+            lines.forEach(line => {
+                const match = line.match(/^\d+\.\s*(.+)$/);
+                if (match) {
+                    titles.push(match[0].trim());
+                }
+            });
+
+            if (titles.length === 0) {
+                // 파싱 실패 시 원본 텍스트를 줄 단위로 분리
+                return lines.slice(0, 5).map((line, idx) => `${idx + 1}. ${line.trim()}`);
+            }
+
+            return titles.slice(0, 5);
+        }
+
+
+        function displayTitles(titles) {
+            const titleList = document.getElementById('titleList');
+            titleList.innerHTML = '';
+            
+            titles.forEach((title, index) => {
+                const titleItem = document.createElement('div');
+                titleItem.className = 'title-item';
+                titleItem.textContent = title;
+                titleItem.onclick = () => selectTitle(title, index);
+                titleList.appendChild(titleItem);
+            });
+
+            // 선택된 제목 표시와 버튼 숨기기
+            document.getElementById('selectedTitleDisplay').classList.add('hidden');
+            document.getElementById('generateContentBtn').classList.add('hidden');
+            selectedTitle = '';
+
+            document.getElementById('titleSection').classList.remove('hidden');
+        }
+
+        function selectTitle(title, index) {
+            selectedTitle = title;
+            
+            // 선택된 항목 하이라이트
+            const items = document.querySelectorAll('.title-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            // 선택된 제목 표시
+            const selectedTitleDisplay = document.getElementById('selectedTitleDisplay');
+            const selectedTitleText = document.getElementById('selectedTitleText');
+            const generateContentBtn = document.getElementById('generateContentBtn');
+            
+            // 제목에서 번호 제거 (예: "1. 제목내용" -> "제목내용")
+            const titleWithoutNumber = title.replace(/^\d+\.\s*/, '');
+            selectedTitleText.textContent = titleWithoutNumber;
+            
+            selectedTitleDisplay.classList.remove('hidden');
+            generateContentBtn.classList.remove('hidden');
+            
+            // 본문 섹션 숨기기 (이전에 생성된 본문이 있다면)
+            document.getElementById('contentSection').classList.add('hidden');
+        }
+
+        async function generateContent() {
+            if (!selectedTitle) {
+                alert('제목을 먼저 선택해주세요.');
+                return;
+            }
+
+            const keyword = mainKeyword;
+            const storeName = experienceData.storeName || '';
+            const ref1 = experienceData.ref1 || '';
+            const ref2 = experienceData.ref2 || '';
+            const ref3 = experienceData.ref3 || '';
+            const visitInfo = experienceData.visitInfo || '주말 저녁';
+            const menu = experienceData.menu || '';
+            const tasteMemo = experienceData.tasteMemo || '';
+            const visitType = experienceData.visitType || 'after';
+
+            const generateContentBtn = document.getElementById('generateContentBtn');
+            generateContentBtn.disabled = true;
+            generateContentBtn.textContent = '원고 생성 중...';
+
+            const contentResult = document.getElementById('contentResult');
+            contentResult.innerHTML = '<div class="loading">본문을 생성하고 있습니다. 잠시만 기다려주세요...</div>';
+            document.getElementById('contentSection').classList.remove('hidden');
+            document.getElementById('contentSection').scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                let prompt;
+                
+                if (visitType === 'before') {
+                    // 가기 전 작성 (체험단용) 프롬프트 - 다녀온 후 작성과 동일한 구조 사용
+                    prompt = `# 역할 지정
+
+당신은 네이버 블로그 검색 로직(C-RANK, DIA+)에 최적화된 맛집 전문 작가입니다. 
+
+제공된 [참고 글 3개]의 문체와 흐름을 분석하여, [나의 경험 데이터]를 바탕으로 표절률 0%의 창의적인 글을 작성해야 합니다.
+
+# 중요 제약 사항 (반드시 준수)
+
+1. 출력물에 이모지(😊, ✨ 등)를 절대 사용하지 마십시오.
+
+2. 마크다운 문법(**굵게**, ## 제목, - 리스트 등)을 절대 사용하지 마십시오. 특수문자 없이 오직 줄글과 엔터(줄바꿈)로만 작성하십시오.
+
+3. 사진이 들어갈 위치나 지도가 들어갈 위치는 괄호 ( )를 사용하여 텍스트로만 표시하십시오. 예: (사진: 메뉴판)
+
+4. 문단은 모바일 가독성을 위해 3~4줄 내외로 짧게 끊어서 작성하십시오.
+
+5. 강조하고 싶은 문구는 <<텍스트>> 형식으로 감싸서 작성할 것. 예: <<정말 맛있었어요>>
+
+6. 사진은 총 20~30장이 들어가야 하며, 각 문단(섹션)마다 1~3장씩 자연스럽게 배치해야 합니다. 사진은 (사진: 설명) 형식으로 표시하세요.
+
+# 입력 데이터
+
+1. 메인 키워드: ${keyword}
+
+2. 참고할 블로그 글(3개):
+
+   - [글 1 내용]
+${ref1 || '(없음)'}
+
+   - [글 2 내용]
+${ref2 || '(없음)'}
+
+   - [글 3 내용]
+${ref3 || '(없음)'}
+
+3. 나의 경험 데이터(필수 요소):
+
+   - 방문 일시/동행: ${visitInfo || '[예: 주말 저녁, 친구와]'}
+
+   - 체험 메뉴: ${menu || '[예: 삼겹살 2인분, 김치찌개]'}
+
+   - 맛/특징 메모: ${tasteMemo || '[예: 고기를 직원이 구워줌, 육즙이 많음, 밑반찬 명이나물 맛있음]'}
+
+${storeName ? `4. 매장명: ${storeName}` : ''}
+
+---
+
+# 프로세스 2: 본문 작성
+
+사용자가 제목을 선택하면, 아래 순서와 가이드라인에 맞춰 본문을 작성하십시오.
+
+선택한 제목: ${selectedTitle}
+
+[작성 순서 및 가이드라인]
+
+1. 인트로 (훅킹)
+
+- 3~4줄 이내로 작성.
+
+- 독자의 호기심을 자극하거나 공감을 이끄는 문장으로 시작.
+
+- 방문하게 된 이유를 자연스럽게 언급.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+2. 외관 및 위치
+
+- 가게 외부 분위기 설명.
+
+- (지도 첨부: ${storeName || keyword}) 이라고 텍스트로 표시.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+3. 내부 인테리어
+
+- 매장 분위기, 조명, 좌석 배치 등 설명.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+4. 메뉴판 및 주문
+
+- 메뉴 구성 설명.
+
+- (사진: 메뉴판) 표시.
+
+- 내가 주문한 메뉴와 선택 이유 언급.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+5. 첫 상차림 (빌드업)
+
+- 밑반찬, 소스, 식기 등 디테일 묘사.
+
+- 메인 음식이 나오기 전의 기대감 표현.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+6. 메인 메뉴 설명 (핵심)
+
+- 시각, 후각, 미각을 동원한 생생한 묘사.
+
+- (사진: 음식 전체 샷) 표시.
+
+- (사진: 음식 근접 샷) 표시.
+
+- 맛 표현은 구체적으로 (식감, 맛의 조화 등).
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+7. 편의시설 및 이벤트
+
+- 주차 정보, 화장실 청결도, 와이파이, 진행 중인 이벤트 등.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+8. 마무리
+
+- 총평 및 재방문 의사.
+
+- 각 문단에 1~3장의 사진을 자연스럽게 배치: (사진: 설명), (사진: 설명), (사진: 설명)
+
+9. 콜투액션 (CTA)
+
+- 이웃 추가 및 소통 유도 멘트.
+
+10. 해시태그
+
+- 샵(#) 기호를 붙여 메인키워드, 연관키워드, 롱테일키워드 등 7~10개 나열.
+
+[어투]
+
+- 친근하고 자연스러운 해요체 사용.
+
+- 이웃에게 대화하듯 가끔 질문을 던지는 반문형 사용.
+
+- 광고 느낌을 배제한 솔직한 후기 스타일.
+
+**자연스러운 표현 필수**: AI가 만든 것처럼 보이는 능글맞은 단어나 과도하게 감성적인 표현은 절대 사용하지 말 것. 평상시 사람들이 실제로 일상 대화에서 사용하는 자연스러운 단어와 표현만 사용할 것.
+
+**금지 표현 예시**: "그곳에서의 순간", "마음 깊은 곳에서", "영혼을 울리는", "심장이 뛰는", "눈물이 나는", "가슴이 뭉클한", "완벽한 하루", "소중한 추억" 등 과장되고 감성적인 표현 금지.
+
+**사용할 표현**: "여기 진짜 맛있어요", "이거 괜찮네요", "생각보다 괜찮았어요", "솔직히 말하면", "사실은", "그냥 평범하게", "뭐 그럭저럭" 등 평범하고 자연스러운 일상 표현 사용.`;
+                } else {
+                    // 다녀온 후 작성 프롬프트
+                    prompt = `# 역할 지정
+
+당신은 네이버 블로그 검색 로직(C-RANK, DIA+)에 최적화된 맛집 전문 작가입니다. 
+
+제공된 [참고 글 3개]의 문체와 흐름을 분석하여, [나의 경험 데이터]를 바탕으로 표절률 0%의 창의적인 글을 작성해야 합니다.
+
+# 중요 제약 사항 (반드시 준수)
+
+1. 출력물에 이모지(😊, ✨ 등)를 절대 사용하지 마십시오.
+
+2. 마크다운 문법(**굵게**, ## 제목, - 리스트 등)을 절대 사용하지 마십시오. 특수문자 없이 오직 줄글과 엔터(줄바꿈)로만 작성하십시오.
+
+3. 사진이 들어갈 위치나 지도가 들어갈 위치는 괄호 ( )를 사용하여 텍스트로만 표시하십시오. 예: (사진: 메뉴판)
+
+4. 문단은 모바일 가독성을 위해 3~4줄 내외로 짧게 끊어서 작성하십시오.
+
+5. 강조하고 싶은 문구는 <<텍스트>> 형식으로 감싸서 작성할 것. 예: <<정말 맛있었어요>>
+
+# 입력 데이터
+
+1. 메인 키워드: ${keyword}
+
+2. 참고할 블로그 글(3개):
+
+   - [글 1 내용]
+${ref1 || '(없음)'}
+
+   - [글 2 내용]
+${ref2 || '(없음)'}
+
+   - [글 3 내용]
+${ref3 || '(없음)'}
+
+3. 나의 경험 데이터(필수 요소):
+
+   - 방문 일시/동행: ${visitInfo || '[예: 주말 저녁, 친구와]'}
+
+   - 체험 메뉴: ${menu || '[예: 삼겹살 2인분, 김치찌개]'}
+
+   - 맛/특징 메모: ${tasteMemo || '[예: 고기를 직원이 구워줌, 육즙이 많음, 밑반찬 명이나물 맛있음]'}
+
+${storeName ? `4. 매장명: ${storeName}` : ''}
+
+---
+
+# 프로세스 2: 본문 작성
+
+사용자가 제목을 선택하면, 아래 순서와 가이드라인에 맞춰 본문을 작성하십시오.
+
+선택한 제목: ${selectedTitle}
+
+[작성 순서 및 가이드라인]
+
+1. 인트로 (훅킹)
+
+- 3~4줄 이내로 작성.
+
+- 독자의 호기심을 자극하거나 공감을 이끄는 문장으로 시작.
+
+- 방문하게 된 이유를 자연스럽게 언급.
+
+2. 외관 및 위치
+
+- 가게 외부 분위기 설명.
+
+- (지도 첨부: ${storeName || keyword}) 이라고 텍스트로 표시.
+
+3. 내부 인테리어
+
+- 매장 분위기, 조명, 좌석 배치 등 설명.
+
+4. 메뉴판 및 주문
+
+- 메뉴 구성 설명.
+
+- (사진: 메뉴판) 표시.
+
+- 내가 주문한 메뉴와 선택 이유 언급.
+
+5. 첫 상차림 (빌드업)
+
+- 밑반찬, 소스, 식기 등 디테일 묘사.
+
+- 메인 음식이 나오기 전의 기대감 표현.
+
+6. 메인 메뉴 설명 (핵심)
+
+- 시각, 후각, 미각을 동원한 생생한 묘사.
+
+- (사진: 음식 전체 샷) 표시.
+
+- (사진: 음식 근접 샷) 표시.
+
+- 맛 표현은 구체적으로 (식감, 맛의 조화 등).
+
+7. 편의시설 및 이벤트
+
+- 주차 정보, 화장실 청결도, 와이파이, 진행 중인 이벤트 등.
+
+8. 마무리
+
+- 총평 및 재방문 의사.
+
+9. 콜투액션 (CTA)
+
+- 이웃 추가 및 소통 유도 멘트.
+
+10. 해시태그
+
+- 샵(#) 기호를 붙여 메인키워드, 연관키워드, 롱테일키워드 등 7~10개 나열.
+
+[어투]
+
+- 친근하고 자연스러운 해요체 사용.
+
+- 이웃에게 대화하듯 가끔 질문을 던지는 반문형 사용.
+
+- 광고 느낌을 배제한 솔직한 후기 스타일.
+
+**자연스러운 표현 필수**: AI가 만든 것처럼 보이는 능글맞은 단어나 과도하게 감성적인 표현은 절대 사용하지 말 것. 평상시 사람들이 실제로 일상 대화에서 사용하는 자연스러운 단어와 표현만 사용할 것.
+
+**금지 표현 예시**: "그곳에서의 순간", "마음 깊은 곳에서", "영혼을 울리는", "심장이 뛰는", "눈물이 나는", "가슴이 뭉클한", "완벽한 하루", "소중한 추억" 등 과장되고 감성적인 표현 금지.
+
+**사용할 표현**: "여기 진짜 맛있어요", "이거 괜찮네요", "생각보다 괜찮았어요", "솔직히 말하면", "사실은", "그냥 평범하게", "뭐 그럭저럭" 등 평범하고 자연스러운 일상 표현 사용.`;
+                }
+
+                // API 키 확인
+                if (!GEMINI_API_KEY) {
+                    throw new Error('API 키가 설정되지 않았습니다. 먼저 API 키를 입력하고 저장해주세요.');
+                }
+
+                const response = await fetch(getGeminiApiUrl(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message || 'API 오류가 발생했습니다.');
+                }
+
+                const generatedText = data.candidates[0].content.parts[0].text;
+                // 제목에서 번호 제거 (예: "1. 제목내용" -> "제목내용")
+                const titleWithoutNumber = selectedTitle.replace(/^\d+\.\s*/, '');
+                
+                // 강조 문구 변환 함수 (<<텍스트>> 또는 **텍스트** 형식을 <strong>태그로 변환)
+                function convertHighlightToHTML(text) {
+                    // <<텍스트>> 형식을 <strong>태그로 변환
+                    text = text.replace(/<<([^>>]+)>>/g, '<strong>$1</strong>');
+                    // **텍스트** 형식을 <strong>태그로 변환 (마크다운이 아닌 강조 표시로 사용)
+                    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                    // 줄바꿈을 <br>로 변환
+                    text = text.replace(/\n/g, '<br>');
+                    return text;
+                }
+                
+                // 제목과 본문을 함께 출력 (HTML 형식)
+                const fullContent = titleWithoutNumber + '<br><br>' + generatedText;
+                contentResult.innerHTML = convertHighlightToHTML(fullContent);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('본문 생성 중 오류가 발생했습니다: ' + error.message);
+                contentResult.textContent = '본문 생성 중 오류가 발생했습니다. 다시 시도해주세요.';
+            } finally {
+                const generateContentBtn = document.getElementById('generateContentBtn');
+                generateContentBtn.disabled = false;
+                generateContentBtn.textContent = '포스팅 원고 생성하기';
+            }
+        }
+
+
+        function resetAll() {
+            if (confirm('모든 입력 내용을 초기화하시겠습니까?')) {
+                // 모든 입력 필드 초기화
+                document.getElementById('mainKeyword').value = '';
+                document.getElementById('storeName').value = '';
+                document.getElementById('reference1').value = '';
+                document.getElementById('reference2').value = '';
+                document.getElementById('reference3').value = '';
+                document.getElementById('visitInfo').value = '';
+                document.getElementById('menu').value = '';
+                document.getElementById('tasteMemo').value = '';
+                
+                // 라디오 버튼 초기화 (다녀온 후 작성으로 설정)
+                document.getElementById('afterVisit').checked = true;
+                document.getElementById('beforeVisit').checked = false;
+                
+                // 모든 섹션 숨기기
+                document.getElementById('titleSection').classList.add('hidden');
+                document.getElementById('contentSection').classList.add('hidden');
+                document.getElementById('selectedTitleDisplay').classList.add('hidden');
+                document.getElementById('generateContentBtn').classList.add('hidden');
+                
+                // 변수 초기화
+                selectedTitle = '';
+                mainKeyword = '';
+                experienceData = {};
+                
+                // 제목 리스트와 본문 초기화
+                document.getElementById('titleList').innerHTML = '';
+                document.getElementById('contentResult').innerHTML = '';
+            }
+        }
+
+        function resetTitles() {
+            document.getElementById('titleSection').classList.add('hidden');
+            document.getElementById('contentSection').classList.add('hidden');
+            document.getElementById('selectedTitleDisplay').classList.add('hidden');
+            document.getElementById('generateContentBtn').classList.add('hidden');
+            selectedTitle = '';
+        }
+
+        function copyContent() {
+            const contentElement = document.getElementById('contentResult');
+            // innerText를 사용하여 렌더링된 텍스트를 가져옴 (줄바꿈 유지)
+            let content = contentElement.innerText || contentElement.textContent;
+            
+            // 줄바꿈이 제대로 유지되도록 처리
+            // 여러 공백이나 줄바꿈이 하나로 합쳐지지 않도록 보장
+            navigator.clipboard.writeText(content).then(() => {
+                alert('본문이 클립보드에 복사되었습니다!');
+            }).catch(err => {
+                // 폴백: 텍스트 선택 방식
+                const textArea = document.createElement('textarea');
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                textArea.value = content;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('본문이 클립보드에 복사되었습니다!');
+                } catch (err) {
+                    alert('복사에 실패했습니다. 텍스트를 직접 선택해서 복사해주세요.');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // 네이버 블로그 검색 결과에서 상위 3개 URL 자동 수집
+        async function autoCollectBlogPosts() {
+            const storeName = document.getElementById('storeName').value.trim();
+            
+            if (!storeName) {
+                alert('매장명을 입력해주세요.');
+                return;
+            }
+
+            const autoCollectBtn = document.getElementById('autoCollectBtn');
+            const originalText = autoCollectBtn.textContent;
+            
+            autoCollectBtn.disabled = true;
+            autoCollectBtn.textContent = '검색 중...';
+
+            try {
+                // 여러 방법으로 블로그 URL 수집 시도
+                let blogUrls = [];
+                
+                // 방법 1: 네이버 검색 JSON API 시도
+                try {
+                    blogUrls = await searchNaverBlogAPI(storeName);
+                    console.log('API 방식으로 찾은 URL:', blogUrls);
+                } catch (e) {
+                    console.log('API 방식 실패, HTML 파싱 시도:', e);
+                }
+                
+                // 방법 2: HTML 파싱 시도 (API가 실패한 경우)
+                if (blogUrls.length === 0) {
+                    try {
+                        const searchQuery = encodeURIComponent(storeName);
+                        const searchUrl = `https://search.naver.com/search.naver?where=post&query=${searchQuery}`;
+                        const html = await fetchWithProxy(searchUrl);
+                        
+                        if (html) {
+                            blogUrls = extractBlogUrlsFromSearch(html);
+                            console.log('HTML 파싱으로 찾은 URL:', blogUrls);
+                        }
+                    } catch (e) {
+                        console.log('HTML 파싱 실패:', e);
+                    }
+                }
+                
+                // 방법 3: 네이버 블로그 직접 검색 페이지 시도
+                if (blogUrls.length === 0) {
+                    try {
+                        const blogSearchUrl = `https://search.naver.com/search.naver?where=post&sm=tab_jum&query=${encodeURIComponent(storeName)}`;
+                        const html = await fetchWithProxy(blogSearchUrl);
+                        
+                        if (html) {
+                            blogUrls = extractBlogUrlsFromSearch(html);
+                            console.log('블로그 검색 페이지로 찾은 URL:', blogUrls);
+                        }
+                    } catch (e) {
+                        console.log('블로그 검색 페이지 실패:', e);
+                    }
+                }
+                
+                if (blogUrls.length === 0) {
+                    throw new Error('블로그 검색 결과를 찾을 수 없습니다.\n\n해결 방법:\n1. 매장명을 더 구체적으로 입력해보세요\n2. 네이버 블로그 검색 결과 페이지를 직접 열어서 URL을 복사해주세요\n3. 브라우저 확장 프로그램(CORS Unblock)을 설치해보세요');
+                }
+
+                // 상위 3개만 사용
+                const top3Urls = blogUrls.slice(0, 3);
+                
+                // 각 블로그 URL을 참고글 1,2,3에 자동으로 입력하고 수집
+                let successCount = 0;
+                for (let i = 0; i < top3Urls.length; i++) {
+                    const num = i + 1;
+                    const urlInput = document.getElementById(`blogUrl${num}`);
+                    const textarea = document.getElementById(`reference${num}`);
+                    
+                    // URL 입력
+                    urlInput.value = top3Urls[i];
+                    
+                    // 수집 진행 상태 표시
+                    autoCollectBtn.textContent = `${num}/3 수집 중...`;
+                    textarea.value = `블로그 내용을 수집하고 있습니다... (${num}/3)`;
+                    textarea.style.color = '#667eea';
+                    
+                    // 블로그 내용 수집
+                    try {
+                        await crawlBlogToTextareaInternal(num, top3Urls[i]);
+                        successCount++;
+                    } catch (error) {
+                        console.error(`블로그 ${num} 수집 실패:`, error);
+                        textarea.value = `수집 실패: ${error.message}\n\nURL: ${top3Urls[i]}\n\n수동으로 "수집" 버튼을 클릭해보세요.`;
+                        textarea.style.color = '#dc3545';
+                    }
+                    
+                    // 다음 수집 전 잠시 대기 (서버 부하 방지)
+                    if (i < top3Urls.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                    }
+                }
+
+                if (successCount > 0) {
+                    alert(`상위 ${top3Urls.length}개 블로그 URL을 찾았고, ${successCount}개를 성공적으로 수집했습니다!`);
+                } else {
+                    alert(`상위 ${top3Urls.length}개 블로그 URL을 찾았지만 수집에 실패했습니다.\n\n각 참고글의 "수집" 버튼을 수동으로 클릭해보세요.`);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('자동 수집 중 오류가 발생했습니다: ' + error.message);
+            } finally {
+                autoCollectBtn.disabled = false;
+                autoCollectBtn.textContent = originalText;
+            }
+        }
+        
+        // 네이버 블로그 검색 페이지 열기
+        function openNaverSearch() {
+            const storeName = document.getElementById('storeName').value.trim();
+            if (!storeName) {
+                alert('먼저 매장명을 입력해주세요.');
+                return;
+            }
+            const searchUrl = `https://search.naver.com/search.naver?where=post&query=${encodeURIComponent(storeName)}`;
+            window.open(searchUrl, '_blank');
+        }
+        
+        // 네이버 블로그 검색 API 사용 (JSON 데이터)
+        async function searchNaverBlogAPI(query) {
+            const blogUrls = [];
+            const seenUrls = new Set();
+            
+            // 네이버 검색 API 엔드포인트 시도
+            const apiUrls = [
+                `https://openapi.naver.com/v1/search/blog.json?query=${encodeURIComponent(query)}&display=3&sort=sim`,
+                `https://search.naver.com/search.naver?where=post&query=${encodeURIComponent(query)}&display=3`
+            ];
+            
+            // 네이버 검색 결과 페이지에서 JSON 데이터 찾기
+            try {
+                const searchUrl = `https://search.naver.com/search.naver?where=post&query=${encodeURIComponent(query)}`;
+                const html = await fetchWithProxy(searchUrl);
+                
+                if (html) {
+                    // HTML에서 JSON 데이터 추출 시도
+                    // 네이버는 보통 window.__NEXT_DATA__ 또는 다른 전역 변수에 데이터를 저장
+                    const jsonMatches = [
+                        /window\.__NEXT_DATA__\s*=\s*({.+?});/s,
+                        /window\.__initialData__\s*=\s*({.+?});/s,
+                        /"items":\s*\[(.*?)\]/s,
+                        /blog\.naver\.com\/[^\/\s"']+\/\d+/g
+                    ];
+                    
+                    for (const pattern of jsonMatches) {
+                        const matches = html.match(pattern);
+                        if (matches) {
+                            // 블로그 URL 직접 추출
+                            const urlMatches = html.matchAll(/https?:\/\/blog\.naver\.com\/[^\/\s"']+\/\d+/g);
+                            for (const match of urlMatches) {
+                                const url = match[0];
+                                if (!seenUrls.has(url)) {
+                                    seenUrls.add(url);
+                                    blogUrls.push(url);
+                                }
+                            }
+                            
+                            if (blogUrls.length >= 3) break;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('API 검색 실패:', e);
+            }
+            
+            return blogUrls;
+        }
+
+        // 네이버 검색 결과에서 블로그 URL 추출
+        function extractBlogUrlsFromSearch(html) {
+            const blogUrls = [];
+            const seenUrls = new Set(); // 중복 방지용 Set
+            
+            // 정규표현식으로 직접 추출 (가장 확실한 방법)
+            // 더 포괄적인 패턴 추가
+            const urlPatterns = [
+                /https?:\/\/blog\.naver\.com\/[^\/\s"']+\/\d+/g,
+                /blog\.naver\.com\/[^\/\s"']+\/\d+/g,
+                /url=([^&]*blog\.naver\.com[^&]*)/g,
+                /"link":"([^"]*blog\.naver\.com[^"]*)"/g,
+                /"url":"([^"]*blog\.naver\.com[^"]*)"/g,
+                /href="([^"]*blog\.naver\.com[^"]*)"/g,
+                /href='([^']*blog\.naver\.com[^']*)'/g
+            ];
+            
+            for (const pattern of urlPatterns) {
+                const matches = html.matchAll(pattern);
+                for (const match of matches) {
+                    let url = match[0] || match[1];
+                    
+                    // URL 정규화
+                    if (url) {
+                        // JSON 형식에서 추출한 경우 (이스케이프 문자 제거)
+                        url = url.replace(/\\\//g, '/').replace(/\\u([0-9a-fA-F]{4})/g, (match, code) => {
+                            return String.fromCharCode(parseInt(code, 16));
+                        });
+                        
+                        // url= 파라미터에서 추출한 경우
+                        if (url.includes('url=')) {
+                            const urlMatch = url.match(/url=([^&]+)/);
+                            if (urlMatch) {
+                                url = decodeURIComponent(urlMatch[1]);
+                            }
+                        }
+                        
+                        // href나 link 속성에서 추출한 경우
+                        if (url.includes('href=') || url.includes('link=')) {
+                            const urlMatch = url.match(/(?:href|link)=["']?([^"'\s]+)["']?/);
+                            if (urlMatch) {
+                                url = urlMatch[1];
+                            }
+                        }
+                        
+                        // http가 없으면 추가
+                        if (!url.startsWith('http')) {
+                            url = 'https://' + url.replace(/^\/\//, '');
+                        }
+                        
+                        // 유효한 블로그 URL 형식인지 확인
+                        if (url.match(/https?:\/\/blog\.naver\.com\/[^\/]+\/\d+/)) {
+                            // URL 정규화 (최종)
+                            url = url.split('&')[0].split('?')[0]; // 쿼리 파라미터 제거
+                            
+                            // 중복 제거
+                            if (!seenUrls.has(url)) {
+                                seenUrls.add(url);
+                                blogUrls.push(url);
+                            }
+                        }
+                    }
+                }
+                
+                if (blogUrls.length >= 3) break;
+            }
+            
+            // DOM 파싱으로도 시도 (정규표현식으로 찾지 못한 경우)
+            if (blogUrls.length < 3) {
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // 여러 선택자 시도
+                    const selectors = [
+                        'a[href*="blog.naver.com"]',
+                        '.api_subject_bx a',
+                        '.sh_blog_top a',
+                        '.total_tit a',
+                        '.title_link',
+                        '.sh_blog_title',
+                        '[class*="blog"] a'
+                    ];
+                    
+                    for (const selector of selectors) {
+                        const links = doc.querySelectorAll(selector);
+                        for (const link of links) {
+                            let url = link.getAttribute('href') || link.href || '';
+                            
+                            // 네이버 검색 결과 URL에서 실제 블로그 URL 추출
+                            if (url.includes('url=')) {
+                                const match = url.match(/url=([^&]+)/);
+                                if (match) {
+                                    url = decodeURIComponent(match[1]);
+                                }
+                            }
+                            
+                            // blog.naver.com 형식으로 변환
+                            if (url && url.includes('blog.naver.com')) {
+                                if (!url.startsWith('http')) {
+                                    url = 'https://' + url.replace(/^\/\//, '');
+                                }
+                                
+                                // 유효한 URL인지 확인
+                                if (url.match(/https?:\/\/blog\.naver\.com\/[^\/]+\/\d+/)) {
+                                    if (!seenUrls.has(url)) {
+                                        seenUrls.add(url);
+                                        blogUrls.push(url);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (blogUrls.length >= 3) break;
+                    }
+                } catch (e) {
+                    console.error('DOM 파싱 오류:', e);
+                }
+            }
+            
+            return blogUrls.slice(0, 3); // 최대 3개만 반환
+        }
+
+        // 블로그 크롤링 내부 함수 (URL을 직접 받아서 처리)
+        async function crawlBlogToTextareaInternal(num, url) {
+            const textarea = document.getElementById(`reference${num}`);
+            
+            // 모바일 URL로 변환 (더 파싱하기 쉬움)
+            let targetUrl = url;
+            if (url.includes('blog.naver.com/') && !url.includes('m.blog.naver.com')) {
+                targetUrl = url.replace('blog.naver.com/', 'm.blog.naver.com/');
+            }
+
+            // CORS 프록시를 통해 HTML 가져오기
+            const html = await fetchWithProxy(targetUrl);
+            
+            if (!html) {
+                throw new Error('블로그 내용을 가져올 수 없습니다.');
+            }
+
+            // HTML 파싱하여 본문 추출
+            const content = parseBlogContent(html);
+            
+            if (!content || content.trim().length === 0) {
+                throw new Error('블로그 본문을 찾을 수 없습니다.');
+            }
+
+            // textarea에 결과 입력
+            textarea.value = content;
+            textarea.style.color = '#333';
+        }
+
+        // 블로그 크롤링 함수 (textarea에 직접 입력)
+        async function crawlBlogToTextarea(num) {
+            const urlInput = document.getElementById(`blogUrl${num}`);
+            const textarea = document.getElementById(`reference${num}`);
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('네이버 블로그 URL을 입력해주세요.');
+                return;
+            }
+
+            // 네이버 블로그 URL 형식 검증
+            if (!url.includes('blog.naver.com')) {
+                alert('올바른 네이버 블로그 URL을 입력해주세요.\n예: https://blog.naver.com/아이디/1234567890');
+                return;
+            }
+
+            const crawlBtn = urlInput.nextElementSibling;
+            const originalText = crawlBtn.textContent;
+            
+            crawlBtn.disabled = true;
+            crawlBtn.textContent = '수집 중...';
+            textarea.value = '블로그 내용을 수집하고 있습니다. 잠시만 기다려주세요...';
+            textarea.style.color = '#667eea';
+
+            try {
+                await crawlBlogToTextareaInternal(num, url);
+                alert('블로그 내용이 성공적으로 수집되었습니다!');
+            } catch (error) {
+                console.error('Error:', error);
+                textarea.value = `오류 발생: ${error.message}\n\n다음 방법을 시도해보세요:\n1. 브라우저 확장 프로그램(CORS Unblock) 설치\n2. URL이 올바른지 확인\n3. 블로그가 공개되어 있는지 확인`;
+                textarea.style.color = '#dc3545';
+                alert('크롤링 중 오류가 발생했습니다: ' + error.message);
+            } finally {
+                crawlBtn.disabled = false;
+                crawlBtn.textContent = originalText;
+            }
+        }
+
+        async function fetchWithProxy(url) {
+            // 먼저 직접 시도 (같은 도메인이거나 CORS가 허용된 경우)
+            try {
+                const response = await fetch(url, {
+                    mode: 'cors',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                if (response.ok) {
+                    return await response.text();
+                }
+            } catch (e) {
+                console.log('Direct fetch failed, trying proxy...');
+            }
+
+            // 프록시를 통해 시도
+            for (let i = 0; i < CORS_PROXIES.length; i++) {
+                try {
+                    const proxyUrl = CORS_PROXIES[i] + encodeURIComponent(url);
+                    const response = await fetch(proxyUrl, {
+                        mode: 'cors'
+                    });
+                    
+                    if (response.ok) {
+                        return await response.text();
+                    }
+                } catch (e) {
+                    console.log(`Proxy ${i} failed, trying next...`);
+                    continue;
+                }
+            }
+
+            throw new Error('모든 프록시 서버 연결에 실패했습니다.');
+        }
+
+        function parseBlogContent(html) {
+            // 임시 DOM 생성
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // 네이버 블로그 본문을 찾는 여러 방법 시도
+            
+            // 방법 1: 모바일 블로그의 se_component_wrap 클래스
+            let content = doc.querySelector('.se_component_wrap');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 2: se-main-container 클래스
+            content = doc.querySelector('.se-main-container');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 3: post-view 클래스
+            content = doc.querySelector('.post-view');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 4: post_ct 클래스
+            content = doc.querySelector('.post_ct');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 5: _postView 클래스
+            content = doc.querySelector('._postView');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 6: article 태그
+            content = doc.querySelector('article');
+            if (content) {
+                return extractTextFromElement(content);
+            }
+
+            // 방법 7: 본문이 포함된 iframe 찾기 (네이버 블로그는 iframe을 사용하는 경우가 많음)
+            const iframe = doc.querySelector('iframe#mainFrame, iframe.se-main-frame');
+            if (iframe) {
+                // iframe의 src에서 실제 블로그 URL 추출
+                const iframeSrc = iframe.getAttribute('src');
+                if (iframeSrc) {
+                    // iframe 내용은 직접 접근 불가능하므로 사용자에게 안내
+                    return null;
+                }
+            }
+
+            // 방법 8: body 전체에서 텍스트 추출 (최후의 수단)
+            const body = doc.body;
+            if (body) {
+                // 스크립트, 스타일, 네비게이션 등 제거
+                const scripts = body.querySelectorAll('script, style, nav, header, footer, .header, .footer, .nav');
+                scripts.forEach(el => el.remove());
+                
+                return extractTextFromElement(body);
+            }
+
+            return null;
+        }
+
+        function extractTextFromElement(element) {
+            if (!element) return '';
+
+            // 클론 생성하여 원본 보존
+            const clone = element.cloneNode(true);
+            
+            // 불필요한 요소 제거
+            const removeSelectors = [
+                'script', 'style', 'nav', 'header', 'footer',
+                '.ad', '.advertisement', '.banner',
+                '.comment', '.reply', '.social',
+                'iframe', 'noscript'
+            ];
+            
+            removeSelectors.forEach(selector => {
+                clone.querySelectorAll(selector).forEach(el => el.remove());
+            });
+
+            // 텍스트 추출
+            let text = clone.innerText || clone.textContent || '';
+            
+            // 공백 정리
+            text = text
+                .replace(/\s+/g, ' ')  // 여러 공백을 하나로
+                .replace(/\n\s*\n/g, '\n\n')  // 여러 줄바꿈을 두 개로
+                .trim();
+
+            // 한글이 포함되어 있는지 확인
+            const hasKorean = /[가-힣]/.test(text);
+            
+            if (!hasKorean || text.length < 50) {
+                // 한글이 없거나 너무 짧으면 실패로 간주
+                return null;
+            }
+
+            return text;
+        }
+
+        // Enter 키로도 수집 가능하도록
+        document.getElementById('blogUrl1').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                crawlBlogToTextarea(1);
+            }
+        });
+        document.getElementById('blogUrl2').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                crawlBlogToTextarea(2);
+            }
+        });
+        document.getElementById('blogUrl3').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                crawlBlogToTextarea(3);
+            }
+        });
+    </script>
+</body>
+</html>
+
