@@ -1,1011 +1,1102 @@
-
 <!DOCTYPE html>
-<html lang="ko">
+<html class="dark" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>채우미 맛집전용 원고 생성기</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', '맑은 고딕', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 15px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 8px;
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 12px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .section-title-with-button {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copy-btn-inline {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            white-space: nowrap;
-            margin-left: 10px;
-            margin-top: 5px;
-        }
-
-        .copy-btn-inline:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .copy-btn-inline:active {
-            transform: translateY(0);
-        }
-
-        .btn-reset {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn-reset:hover {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-reset:active {
-            transform: translateY(0);
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            color: #555;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: border-color 0.3s;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            margin-top: 8px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            margin-top: 5px;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
-        }
-
-        .result-box {
-            background: white;
-            border: 2px solid #667eea;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            min-height: 100px;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            font-size: 14px;
-            color: #333;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .result-box strong,
-        .result-box .highlight {
-            font-weight: bold;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .title-list {
-            background: white;
-            border: 2px solid #667eea;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
-        .title-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            line-height: 1.5;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
-        }
-
-        .title-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .title-item.selected {
-            background: #667eea;
-            color: white;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .copy-btn {
-            background: #28a745;
-            margin-top: 10px;
-        }
-
-        .copy-btn:hover {
-            background: #218838;
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 15px;
-            color: #667eea;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 15px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .radio-item input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .radio-item label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .blog-url-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .blog-url-input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: border-color 0.3s;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .blog-url-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn-crawl {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            white-space: nowrap;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-crawl:hover {
-            background: #138496;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
-        }
-
-        .btn-crawl:active {
-            transform: translateY(0);
-        }
-
-        .btn-crawl:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#0b50da",
+          "background-light": "#f5f6f8",
+          "background-dark": "#101622",
+        },
+        fontFamily: { "display": ["Inter", "sans-serif"] },
+        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    min-height: max(884px, 100dvh);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 10px; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .screen { display: none; }
+  .screen.active { display: flex; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .nav-item.active span, .nav-item.active p { color: #0b50da; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .animate-spin { animation: spin 1s linear infinite; display: inline-block; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .animate-pulse { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+</style>
 </head>
-<body>
-    <div class="container">
-        <h1>채우미 맛집전용 원고 생성기</h1>
-        <p class="subtitle">네이버 블로그 검색 최적화 맛집 후기 작성 도구</p>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
 
-        <div style="text-align: right; margin-bottom: 15px;">
-            <button class="btn-reset" onclick="resetAll()">초기화</button>
-        </div>
-
-        <div class="section" style="background: #fff3cd; border-left-color: #ffc107;">
-            <div class="section-title">0. API 키 설정</div>
-            <div class="warning" style="margin-bottom: 15px;">
-                <strong>⚠️ 중요:</strong> API 키는 안전하게 관리하세요. 다른 사람과 공유하지 마세요.
-            </div>
-            <div class="input-group">
-                <label>Gemini API 키</label>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="width: 100%;">
-                    <button class="btn-crawl" onclick="toggleApiKeyVisibility()" style="width: 100%; padding: 10px; font-size: 13px;">보기/숨기기</button>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                <button class="btn btn-secondary" onclick="saveApiKey()" style="margin-top: 0;">API 키 저장</button>
-                <button class="btn btn-secondary" onclick="downloadConfig()" style="margin-top: 0;">설정 파일 다운로드</button>
-                <label class="btn btn-secondary" style="margin-top: 0; cursor: pointer; text-align: center;">
-                    설정 파일 불러오기
-                    <input type="file" id="configFileInput" accept=".json" style="display: none;" onchange="loadConfigFile(event)">
-                </label>
-            </div>
-            <div id="apiKeyStatus" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">1. 입력 데이터</div>
-            
-            <div class="input-group">
-                <label style="margin-bottom: 10px;">작성 시점 선택</label>
-                <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" id="afterVisit" name="visitType" value="after" checked>
-                        <label for="afterVisit">다녀온 후 작성</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" id="beforeVisit" name="visitType" value="before">
-                        <label for="beforeVisit">가기 전 작성 (체험단용)</label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="input-group">
-                <label>메인 키워드 (필수 - 제목 맨 앞에 들어감)</label>
-                <input type="text" id="mainKeyword" placeholder="예: 강남 맛집, 홍대 맛집 등">
-            </div>
-
-            <div class="input-group">
-                <label>매장명</label>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <input type="text" id="storeName" placeholder="예: 맛있는집, 고기집 등" style="width: 100%;">
-                    <button class="btn-crawl" onclick="autoCollectBlogPosts()" id="autoCollectBtn" style="width: 100%; padding: 12px; font-size: 14px;">자동 수집</button>
-                </div>
-                <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                    💡 매장명을 입력하고 "자동 수집" 버튼을 클릭하면 네이버 블로그 상위 3개 글이 자동으로 수집됩니다.
-                    <br>
-                    ⚠️ 자동 수집이 실패할 경우: 
-                    <button onclick="openNaverSearch()" style="background: #17a2b8; color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 5px;">네이버 검색 열기</button>
-                    네이버 블로그 검색 결과 페이지에서 상위 3개 블로그 URL을 복사하여 아래 참고글 URL 입력란에 붙여넣고 "수집" 버튼을 클릭하세요.
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>참고 블로그 글 1</label>
-                <div class="blog-url-group">
-                    <input type="text" id="blogUrl1" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
-                    <button class="btn-crawl" onclick="crawlBlogToTextarea(1)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
-                </div>
-                <textarea id="reference1" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
-            </div>
-
-            <div class="input-group">
-                <label>참고 블로그 글 2</label>
-                <div class="blog-url-group">
-                    <input type="text" id="blogUrl2" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
-                    <button class="btn-crawl" onclick="crawlBlogToTextarea(2)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
-                </div>
-                <textarea id="reference2" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
-            </div>
-
-            <div class="input-group">
-                <label>참고 블로그 글 3</label>
-                <div class="blog-url-group">
-                    <input type="text" id="blogUrl3" class="blog-url-input" placeholder="https://blog.naver.com/아이디/1234567890">
-                    <button class="btn-crawl" onclick="crawlBlogToTextarea(3)" style="width: 100%; padding: 10px; font-size: 13px;">수집</button>
-                </div>
-                <textarea id="reference3" placeholder="참고할 블로그 글 내용을 입력하세요"></textarea>
-            </div>
-
-            <div class="input-group">
-                <label>방문 일시/동행</label>
-                <input type="text" id="visitInfo" placeholder="예: 주말 저녁, 친구와">
-            </div>
-
-            <div class="input-group">
-                <label>주문 메뉴</label>
-                <input type="text" id="menu" placeholder="예: 삼겹살 2인분, 김치찌개">
-            </div>
-
-            <div class="input-group">
-                <label>맛/특징 메모</label>
-                <textarea id="tasteMemo" placeholder="예: 고기를 직원이 구워줌, 육즙이 많음, 밑반찬 명이나물 맛있음"></textarea>
-            </div>
-
-            <button class="btn" onclick="generateTitles()">제목 5개 생성하기</button>
-        </div>
-
-        <div id="titleSection" class="section hidden">
-            <div class="section-title">2. 제목 선택</div>
-            <div id="titleList" class="title-list"></div>
-            <div id="selectedTitleDisplay" class="hidden" style="margin-top: 15px; padding: 12px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #667eea;">
-                <div style="font-weight: bold; margin-bottom: 10px; color: #333;">선택된 제목:</div>
-                <div id="selectedTitleText" style="color: #555; font-size: 15px;"></div>
-            </div>
-            <button id="generateContentBtn" class="btn hidden" onclick="generateContent()" style="margin-top: 15px;">포스팅 원고 생성하기</button>
-            <button class="btn btn-secondary" onclick="resetTitles()" style="margin-top: 10px;">다시 생성하기</button>
-        </div>
-
-        <div id="contentSection" class="section hidden">
-            <div class="section-title section-title-with-button">
-                <span>3. 생성된 본문</span>
-                <button class="copy-btn-inline" onclick="copyContent()">생성된글 복사</button>
-            </div>
-            <div id="contentResult" class="result-box"></div>
-        </div>
+<!-- ============================================================ -->
+<!-- SCREEN: 수집 설정 (홈) -->
+<!-- ============================================================ -->
+<div id="screen-home" class="screen active flex-col w-full min-h-screen">
+  <div class="h-12 w-full"></div>
+  <header class="flex items-center px-4 py-3 justify-between sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md z-10 border-b border-slate-200 dark:border-slate-800">
+    <div class="w-10"></div>
+    <h1 class="text-lg font-bold tracking-tight text-center flex-1">수집 설정</h1>
+    <button onclick="navigateTo('screen-settings')" class="w-10 flex items-center justify-center">
+      <span class="material-symbols-outlined text-slate-500 text-xl">settings</span>
+    </button>
+  </header>
+  <main class="flex flex-col px-4 pb-40 max-w-md mx-auto w-full">
+    <div class="py-8 flex flex-col items-center justify-center gap-4">
+      <div class="size-20 rounded-2xl bg-primary/10 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary text-4xl">database_search</span>
+      </div>
+      <div class="text-center">
+        <h2 class="text-xl font-bold">새로운 포스팅 작성</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">매장 정보와 키워드를 입력하세요</p>
+      </div>
     </div>
+    <div class="space-y-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">매장명</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">storefront</span>
+          <input id="storeName" class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" placeholder="예: 홍대 고기집, 강남 스시집" type="text"/>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">메인 키워드 <span class="text-red-500">*</span></label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">key</span>
+          <input id="mainKeyword" class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" placeholder="예: 강남 맛집, 홍대 맛집" type="text"/>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">주문 메뉴</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">restaurant_menu</span>
+          <input id="menuInput" class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" placeholder="예: 삼겹살 2인분, 김치찌개" type="text"/>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">맛/특징 메모</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400 text-xl">description</span>
+          <textarea id="tasteMemo" class="w-full pl-12 pr-4 py-4 min-h-[100px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none" placeholder="예: 직원이 고기 구워줌, 육즙 풍부, 명이나물 맛있음, 주차 편함"></textarea>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-between items-center ml-1">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">방문 정보 &amp; 서브 키워드</label>
+          <span class="text-xs text-slate-500">줄바꿈으로 구분</span>
+        </div>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400 text-xl">label</span>
+          <textarea id="visitInfo" class="w-full pl-12 pr-4 py-4 min-h-[100px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none" placeholder="예: 주말 저녁, 친구와&#10;가족 외식&#10;데이트 코스"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 p-4 rounded-xl bg-slate-100 dark:bg-slate-900/50 flex gap-3">
+      <span class="material-symbols-outlined text-primary text-xl">info</span>
+      <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">메인 키워드는 필수입니다. 설정에서 프롬프트 스타일과 작성 시점을 미리 선택하세요.</p>
+    </div>
+  </main>
+  <div class="fixed bottom-[84px] left-0 w-full px-4 pb-4 bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/90 dark:via-background-dark/90 to-transparent pt-8 z-10">
+    <div class="max-w-md mx-auto">
+      <button onclick="goToCrawl()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">rocket_launch</span>
+        크롤링 시작하기
+      </button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        // Gemini 2.5 Flash 모델 사용
-        const GEMINI_MODEL = 'gemini-2.5-flash';
-        
-        let GEMINI_API_KEY = '';
-        
-        function getGeminiApiUrl() {
-            if (!GEMINI_API_KEY) {
-                throw new Error('API 키가 설정되지 않았습니다. 먼저 API 키를 입력하고 저장해주세요.');
-            }
-            return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-        }
-        
-        function loadApiKey() {
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) {
-                GEMINI_API_KEY = savedKey;
-                document.getElementById('apiKeyInput').value = savedKey;
-                showApiKeyStatus('저장된 API 키가 로드되었습니다.', 'success');
-            } else {
-                showApiKeyStatus('API 키를 입력하고 저장해주세요.', 'warning');
-            }
-        }
-        
-        function saveApiKey() {
-            const apiKey = document.getElementById('apiKeyInput').value.trim();
-            if (!apiKey) {
-                alert('API 키를 입력해주세요.');
-                return;
-            }
-            GEMINI_API_KEY = apiKey;
-            localStorage.setItem('gemini_api_key', apiKey);
-            showApiKeyStatus('API 키가 저장되었습니다.', 'success');
-        }
-        
-        function toggleApiKeyVisibility() {
-            const input = document.getElementById('apiKeyInput');
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-        
-        function showApiKeyStatus(message, type) {
-            const statusDiv = document.getElementById('apiKeyStatus');
-            statusDiv.style.display = 'block';
-            statusDiv.textContent = message;
-            statusDiv.style.background = type === 'success' ? '#d4edda' : '#fff3cd';
-            statusDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #ffc107';
-            statusDiv.style.color = type === 'success' ? '#155724' : '#856404';
-            setTimeout(() => { if (type === 'success') statusDiv.style.display = 'none'; }, 3000);
-        }
-        
-        function downloadConfig() {
-            const apiKey = document.getElementById('apiKeyInput').value.trim() || GEMINI_API_KEY;
-            if (!apiKey) { alert('저장할 API 키가 없습니다.'); return; }
-            const config = { gemini_api_key: apiKey, gemini_model: GEMINI_MODEL, saved_at: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'config.json';
-            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        }
-        
-        function loadConfigFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const config = JSON.parse(e.target.result);
-                    if (config.gemini_api_key) {
-                        GEMINI_API_KEY = config.gemini_api_key;
-                        document.getElementById('apiKeyInput').value = config.gemini_api_key;
-                        localStorage.setItem('gemini_api_key', config.gemini_api_key);
-                        showApiKeyStatus('설정 파일이 로드되었습니다.', 'success');
-                    }
-                } catch (error) { alert('설정 파일을 읽는 중 오류가 발생했습니다.'); }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-        
-        window.addEventListener('DOMContentLoaded', loadApiKey);
+<!-- ============================================================ -->
+<!-- SCREEN: 크롤링 및 제목 생성 -->
+<!-- ============================================================ -->
+<div id="screen-crawl" class="screen flex-col w-full min-h-screen">
+  <header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <div class="flex items-center justify-between p-4 pt-12 max-w-md mx-auto">
+      <button onclick="navigateTo('screen-home')" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+        <span class="material-symbols-outlined text-2xl">arrow_back</span>
+      </button>
+      <h1 class="text-lg font-bold tracking-tight">크롤링 및 제목 생성</h1>
+      <button onclick="openNaverSearch()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="네이버 검색 열기">
+        <span class="material-symbols-outlined text-2xl">open_in_new</span>
+      </button>
+    </div>
+  </header>
+  <main class="flex-1 overflow-y-auto px-4 py-6 space-y-8 pb-32 max-w-md mx-auto w-full">
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">블로그 콘텐츠 분석</h2>
+        <button onclick="autoCollectBlogPosts()" id="autoCollectBtn" class="text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 hover:bg-primary/20 transition-colors">
+          <span class="material-symbols-outlined text-sm">auto_mode</span>
+          자동 수집
+        </button>
+      </div>
+      <div class="flex border-b border-slate-200 dark:border-slate-800 mb-6">
+        <button onclick="switchTab(this, 'tab1')" class="tab-btn flex-1 pb-3 text-sm font-bold border-b-2 border-primary text-primary">블로그 1</button>
+        <button onclick="switchTab(this, 'tab2')" class="tab-btn flex-1 pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400">블로그 2</button>
+        <button onclick="switchTab(this, 'tab3')" class="tab-btn flex-1 pb-3 text-sm font-bold border-b-2 border-transparent text-slate-500 dark:text-slate-400">블로그 3</button>
+      </div>
+      <div class="space-y-6">
+        <div id="tab1" class="tab-content flex flex-col gap-3">
+          <div class="flex gap-2">
+            <input id="blogUrl1" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="crawlBlogToTextarea(1)" id="crawlBtn1" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">download</span>수집
+            </button>
+          </div>
+          <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">description</span>블로그 1 내용
+          </label>
+          <textarea id="reference1" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+        </div>
+        <div id="tab2" class="tab-content flex flex-col gap-3">
+          <div class="flex gap-2">
+            <input id="blogUrl2" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="crawlBlogToTextarea(2)" id="crawlBtn2" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">download</span>수집
+            </button>
+          </div>
+          <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">description</span>블로그 2 내용
+          </label>
+          <textarea id="reference2" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+        </div>
+        <div id="tab3" class="tab-content flex flex-col gap-3">
+          <div class="flex gap-2">
+            <input id="blogUrl3" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="crawlBlogToTextarea(3)" id="crawlBtn3" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">download</span>수집
+            </button>
+          </div>
+          <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">description</span>블로그 3 내용
+          </label>
+          <textarea id="reference3" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+        </div>
+      </div>
+    </section>
+    <section class="pt-2">
+      <button onclick="generateTitles()" id="generateTitlesBtn" class="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[0.98] active:scale-95 transition-transform flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">magic_button</span>
+        최적화된 제목 생성하기
+      </button>
+    </section>
+    <section class="pb-24">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">생성된 제목 목록</h2>
+        <span id="titleCountBadge" class="hidden px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded">TOP 10</span>
+      </div>
+      <div id="titleList" class="space-y-3">
+        <p class="text-sm text-slate-400 text-center py-8">제목을 생성하면 여기에 표시됩니다.</p>
+      </div>
+      <div id="goToDraftBtn" class="hidden mt-4">
+        <button onclick="navigateTo('screen-draft')" class="w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">
+          <span class="material-symbols-outlined">edit_square</span>
+          선택 완료 → 초안 작성하기
+        </button>
+      </div>
+    </section>
+  </main>
+</div>
 
-        const CORS_PROXIES = [
-            'https://api.allorigins.win/raw?url=',
-            'https://corsproxy.io/?',
-            'https://cors-anywhere.herokuapp.com/',
-            'https://api.codetabs.com/v1/proxy?quest=',
-            'https://thingproxy.freeboard.io/fetch/'
-        ];
+<!-- ============================================================ -->
+<!-- SCREEN: 초안 생성 및 내보내기 -->
+<!-- ============================================================ -->
+<div id="screen-draft" class="screen flex-col w-full min-h-screen">
+  <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <div class="flex items-center p-4 justify-between max-w-md mx-auto">
+      <div onclick="navigateTo('screen-crawl')" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-slate-700 dark:text-slate-300">arrow_back_ios_new</span>
+      </div>
+      <h1 class="text-lg font-bold tracking-tight text-center flex-1">초안 생성 및 내보내기</h1>
+      <button onclick="copyContent()" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+        <span class="material-symbols-outlined text-slate-700 dark:text-slate-300">content_copy</span>
+      </button>
+    </div>
+  </header>
+  <main class="flex-1 flex flex-col max-w-md mx-auto w-full px-4 pt-6 pb-24">
+    <div class="mb-6 p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+      <span class="text-xs font-semibold text-primary uppercase tracking-wider mb-2 block">선택된 제목</span>
+      <h2 id="selectedTitleDisplay" class="text-base font-bold leading-snug text-slate-400 dark:text-slate-500">크롤링 화면에서 제목을 선택해주세요</h2>
+    </div>
+    <div class="mb-6">
+      <button onclick="generateContent()" id="generateContentBtn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        <span>초안 생성하기</span>
+      </button>
+    </div>
+    <div class="flex items-center justify-between mb-3 px-1">
+      <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400">생성된 블로그 초안</h3>
+      <div class="flex gap-3">
+        <span onclick="copyContent()" class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors" style="font-size:18px">content_copy</span>
+      </div>
+    </div>
+    <div class="flex-1 min-h-[400px] p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner overflow-y-auto custom-scrollbar">
+      <div id="contentResult" class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+        <p class="text-slate-400 text-center py-8 italic">초안 생성하기 버튼을 클릭하면 여기에 블로그 본문이 생성됩니다.</p>
+      </div>
+    </div>
+    <div id="copyNotice" class="hidden mt-4 flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-green-100 dark:bg-green-900/30 self-center">
+      <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+      <p class="text-xs font-medium text-green-700 dark:text-green-400">클립보드에 복사되었습니다.</p>
+    </div>
+  </main>
+</div>
 
-        let selectedTitle = '';
-        let mainKeyword = '';
-        let experienceData = {};
+<!-- ============================================================ -->
+<!-- SCREEN: 설정 -->
+<!-- ============================================================ -->
+<div id="screen-settings" class="screen flex-col w-full min-h-screen">
+  <div class="flex justify-between items-center px-8 pt-8 pb-2 w-full max-w-md mx-auto text-slate-900 dark:text-slate-100">
+    <span class="text-xs font-bold">채우미 맛집 자동포스팅</span>
+    <span class="text-xs text-slate-500">Gemini 2.5 Flash</span>
+  </div>
+  <div class="px-6 py-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 max-w-md mx-auto w-full">
+    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">설정</h1>
+    <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+      <span class="material-symbols-outlined">account_circle</span>
+    </div>
+  </div>
+  <main class="flex-1 overflow-y-auto px-6 py-4 space-y-6 pb-32 max-w-md mx-auto w-full">
 
-        async function generateTitles() {
-            const keyword = document.getElementById('mainKeyword').value.trim();
-            const storeName = document.getElementById('storeName').value.trim();
-            const ref1 = document.getElementById('reference1').value.trim();
-            const ref2 = document.getElementById('reference2').value.trim();
-            const ref3 = document.getElementById('reference3').value.trim();
-            const visitInfo = document.getElementById('visitInfo').value.trim();
-            const menu = document.getElementById('menu').value.trim();
-            const tasteMemo = document.getElementById('tasteMemo').value.trim();
-            const visitType = document.querySelector('input[name="visitType"]:checked').value;
+    <!-- API 키 섹션 -->
+    <section class="space-y-3">
+      <div class="flex items-center gap-2 text-primary">
+        <span class="material-symbols-outlined text-xl">key</span>
+        <h2 class="text-sm font-semibold uppercase tracking-wider">API 연동</h2>
+      </div>
+      <div class="space-y-1.5">
+        <label class="text-sm text-slate-600 dark:text-slate-400 ml-1">Gemini API 키</label>
+        <div class="relative group">
+          <input id="apiKeyInput" class="w-full bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="AIzaSy..." type="password"/>
+          <button onclick="toggleApiKeyVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
+            <span id="apiKeyVisIcon" class="material-symbols-outlined">visibility</span>
+          </button>
+        </div>
+      </div>
+      <div id="apiKeyStatus" class="hidden text-xs px-3 py-2 rounded-lg"></div>
+      <div class="flex gap-2">
+        <button onclick="downloadConfig()" class="flex-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-2.5 rounded-xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-sm">download</span>설정 파일 저장
+        </button>
+        <label class="flex-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-2.5 rounded-xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-1 cursor-pointer">
+          <span class="material-symbols-outlined text-sm">upload</span>설정 파일 불러오기
+          <input type="file" id="configFileInput" accept=".json" style="display:none" onchange="loadConfigFile(event)">
+        </label>
+      </div>
+    </section>
 
-            if (!keyword) {
-                alert('메인 키워드를 입력해주세요.');
-                return;
-            }
+    <!-- AI 구성 섹션 -->
+    <section class="space-y-3">
+      <div class="flex items-center gap-2 text-primary">
+        <span class="material-symbols-outlined text-xl">psychology</span>
+        <h2 class="text-sm font-semibold uppercase tracking-wider">AI 구성</h2>
+      </div>
+      <div class="space-y-1.5">
+        <label class="text-sm text-slate-600 dark:text-slate-400 ml-1">프롬프트 스타일 선택</label>
+        <div class="relative">
+          <select id="promptVersion" onchange="updatePromptDescription()" class="w-full appearance-none bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+            <option value="natural">해요체 친근 스타일 (기본)</option>
+            <option value="emotional">해요체 감성 일상 스타일</option>
+            <option value="informative">해요체 정보형 리뷰 스타일</option>
+            <option value="experience">해요체 자연 방문 스타일</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+        </div>
+        <p id="promptDescription" class="text-xs text-slate-500 dark:text-slate-400 px-1 leading-relaxed mt-1"></p>
+      </div>
+      <div class="space-y-1.5">
+        <label class="text-sm text-slate-600 dark:text-slate-400 ml-1">작성 시점</label>
+        <div class="relative">
+          <select id="visitTypeSelect" class="w-full appearance-none bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+            <option value="after">다녀온 후 작성</option>
+            <option value="before">가기 전 작성 (체험단용)</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+        </div>
+      </div>
+    </section>
 
-            mainKeyword = keyword;
-            experienceData = { visitType, storeName, visitInfo, menu, tasteMemo, ref1, ref2, ref3 };
+    <div class="pt-4">
+      <button onclick="saveSettings()" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">설정 저장하기</button>
+      <p class="text-center text-xs text-slate-500 mt-4">모델: gemini-2.5-flash (고정)</p>
+    </div>
+  </main>
+</div>
 
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = '제목 생성 중...';
+<!-- ============================================================ -->
+<!-- BOTTOM NAVIGATION -->
+<!-- ============================================================ -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 z-50">
+  <div class="flex max-w-md mx-auto px-6 py-3 justify-between items-center">
+    <a onclick="navigateTo('screen-home')" class="nav-item flex flex-col items-center gap-1 cursor-pointer active" data-screen="screen-home">
+      <span class="material-symbols-outlined text-slate-400">home</span>
+      <p class="text-[10px] font-medium leading-none text-slate-400">메인</p>
+    </a>
+    <a onclick="navigateTo('screen-crawl')" class="nav-item flex flex-col items-center gap-1 cursor-pointer" data-screen="screen-crawl">
+      <span class="material-symbols-outlined text-slate-400">web_stories</span>
+      <p class="text-[10px] font-medium leading-none text-slate-400">크롤링</p>
+    </a>
+    <a onclick="navigateTo('screen-draft')" class="nav-item flex flex-col items-center gap-1 cursor-pointer" data-screen="screen-draft">
+      <span class="material-symbols-outlined text-slate-400">edit_square</span>
+      <p class="text-[10px] font-medium leading-none text-slate-400">작성</p>
+    </a>
+    <a onclick="navigateTo('screen-settings')" class="nav-item flex flex-col items-center gap-1 cursor-pointer" data-screen="screen-settings">
+      <span class="material-symbols-outlined text-slate-400">settings</span>
+      <p class="text-[10px] font-medium leading-none text-slate-400">설정</p>
+    </a>
+  </div>
+  <div class="h-5"></div>
+</nav>
 
-            const titleList = document.getElementById('titleList');
-            titleList.innerHTML = '<div class="loading">제목을 생성하고 있습니다. 잠시만 기다려주세요...</div>';
-            document.getElementById('titleSection').classList.remove('hidden');
+<script>
+// ============================================================
+// 상수 (절대 변경 금지)
+// ============================================================
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const CORS_PROXIES = [
+  'https://api.allorigins.win/raw?url=',
+  'https://corsproxy.io/?',
+  'https://cors-anywhere.herokuapp.com/',
+  'https://api.codetabs.com/v1/proxy?quest=',
+  'https://thingproxy.freeboard.io/fetch/'
+];
 
-            try {
-                const prompt = `# 절대 명령
-당신은 네이버 블로그 상위 노출 전문가입니다. 딱딱한 문장은 절대 금지, 친구한테 톡 보내듯이 자연스럽게 작성하세요.
+// ============================================================
+// 상태
+// ============================================================
+let GEMINI_API_KEY = '';
+let selectedTitleText = '';
+let experienceData = {};
 
-# 참고 블로그 분석 (이 글들의 말투를 완벽히 따라하세요)
-참고글 1: ${ref1.substring(0, 700)}
-참고글 2: ${ref2.substring(0, 700)}  
-참고글 3: ${ref3.substring(0, 700)}
+// ============================================================
+// 프롬프트 버전 정의
+// ============================================================
+// 모든 프롬프트 공통 금지어 블록
+const COMMON_FORBIDDEN = `
+# 절대 금지 (어기면 전부 다시 작성)
+- 이모지 전면 금지
+- 마크다운 문법 금지 (**, ##, ### 등)
+- 아래 단어들은 단 하나도 사용 금지:
+  [AI 느낌] 훌륭한, 완벽한, 최고의, 멋진, 매력적인, 탁월한, 뛰어난, 우수한, 인상적인, 특별한 경험, 놀라운, 경이로운, 감탄스러운, 압도적인
+  [몽환/서정] 황홀한, 황홀경, 신비로운, 꿈같은, 마법 같은, 영롱한, 환상적인, 매혹적인, 몽환적인, 서정적인, 시간이 멈춘, 빛이 쏟아지는, 감성이 물씬, 분위기에 녹아드는, 마음을 사로잡는, 눈이 부신, 향기가 가득한, 감동적인 여운, 잊을 수 없는 맛, 꿈꾸던
+  [딱딱한 격식체] ~할 수 있습니다, ~하시기 바랍니다, ~되어 있습니다, ~드립니다, ~습니다로 끝나는 문장
+- 문어체 종결어미 금지: ~했다, ~이다, ~한다`;
 
-# 맛집 정보
-- 메인 키워드: ${keyword}
-- 매장명: ${storeName}
-- 메뉴: ${menu}
-- 특징: ${tasteMemo}
+// ============================================================
+// 통합 제목 생성 프롬프트 (모든 스타일 공통 사용)
+// ============================================================
+function buildUnifiedTitlePrompt(d) {
+  function firstLine(text) {
+    if (!text || !text.trim()) return '(참고 글 없음)';
+    var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 10; });
+    return lines[0] ? lines[0].substring(0, 100) : text.trim().substring(0, 100);
+  }
+  return `당신은 네이버 블로그 맛집 후기 전문 제목 작성자입니다.
 
-# 필수 규칙 (하나라도 어기면 0점)
+아래 정보를 기반으로 네이버 홈판 노출에 최적화된 제목 10개를 작성해주세요.
 
-1. **입말체 필수**
-   - ~했는데, ~더라, ~네요, ~거든요, ~잖아, ~대요, ~래요, ~다니까요
-   - 예: "진짜 대박이더라", "완전 내 스타일이네", "이거 실화냐"
+---
 
-2. **SEO 키워드 자연스럽게 녹이기**
-   - ${keyword} (지역) + 맛집/식당 + 메뉴명 + 후기/추천/리뷰
-   - 딱딱하게 나열 금지, 문장 안에 자연스럽게 섞기
+[입력 정보]
+- 메인 키워드: ${d.keyword}
+- 매장명: ${d.storeName || '(없음)'}
+- 상위 블로그 포스팅 제목 3개:
+  1. ${firstLine(d.ref1)}
+  2. ${firstLine(d.ref2)}
+  3. ${firstLine(d.ref3)}
 
-3. **제목 길이**
-   - 최소 40자 ~ 최대 55자
-   - 너무 짧으면 정보 부족, 너무 길면 가독성 저하
+---
 
-4. **말줄임표 사용**
-   - ".." 를 1~2번 사용해서 여운 남기기
-   - 예: "진짜 맛있더라.. 이거 진작 알았으면"
+[제목 작성 규칙]
+1. 메인 키워드와 매장명은 반드시 모든 제목에 포함할 것
+2. 상위 포스팅 3개의 제목 구조, 어휘, 패턴을 분석하되
+   절대 유사하거나 비슷한 느낌이 나지 않도록 완전히 다른 방식으로 작성
+3. 직접 방문한 실제 후기처럼 자연스럽고 생생한 표현 사용
+4. 아래 10가지 유형을 각각 1개씩 다양하게 활용:
+   - 숫자/리스트형
+   - 상황 공감형 (예: ~할 때 딱!)
+   - 솔직 후기형 (예: 직접 먹어보니...)
+   - 비교/의외성형 (예: 기대 안 했는데...)
+   - 계절/시즌형
+   - 재방문 의지형 (예: 또 갈 것 같은...)
+   - 동행자 언급형 (예: 가족/친구/데이트)
+   - 지역 구체화형
+   - 메뉴 중심형
+   - 스토리텔링형
+5. 제목 길이는 반드시 최소 40자 ~ 최대 55자 이내로 작성
+   (공백 포함 기준, 이 범위를 벗어난 제목은 다시 작성)
+6. 과장되거나 어뷰징성 단어 사용 금지 (대박, 충격, 강추!! 등)
+7. 검색자가 실제로 입력할 법한 자연스러운 구어체 포함
 
-5. **감정 표현**
-   - 진짜, 완전, 대박, 미쳤다, 헐, 인정, 찐, 레전드
-   - 예: "완전 인정이네", "진짜 미쳤어"
+---
 
-# 제목 패턴 (반드시 이 스타일로)
+[출력 형식]
+번호. 제목
+(글자수: 00자)
+(유형: 해당 유형 명시)
+(포인트: 이 제목의 노출 전략 한 줄 설명)
 
-**패턴 1: 반전 스토리**
-${keyword} 별로라고 해서 안 갔는데.. ${menu} 먹고 완전 반성했어요
+---
 
-**패턴 2: 후회 고백**
-${keyword} ${menu} 맛집 진작 알았으면.. 여태 어디서 먹고 산 거야 진짜
+위 조건을 모두 충족하는 제목 10개를 작성해주세요.`;
+}
 
-**패턴 3: 극찬 후기**
-${keyword} ${menu} 맛집 찐 후기 | 이거 먹으러 30분 대기 각오했는데 인정
-
-**패턴 4: 비교 평가**
-${keyword} ${menu} 맛집 여기저기 가봤는데 여기가 제일이더라 솔직 후기
-
-**패턴 5: 발견 스토리**
-${keyword} 숨은 ${menu} 맛집 발견 | 로컬만 안다던데 진짜 대박이네요
-
-**패턴 6: 재방문 인증**
-${keyword} ${menu} 맛집 벌써 3번째 방문 | 단골 될 수밖에 없는 이유
-
-**패턴 7: 가성비 강조**
-${keyword} ${menu} 가성비 맛집 | 이 가격에 이 퀄리티 실화냐 진심 추천
-
-**패턴 8: 분위기 강조**
-${keyword} 데이트 ${menu} 맛집 | 분위기 미쳤어.. 여기 완전 내 스타일
-
-**패턴 9: 웨이팅 인증**
-${keyword} ${menu} 줄 서는 맛집 후기 | 1시간 기다렸는데 진짜 인정할 수밖에
-
-**패턴 10: 특별한 경험**
-${keyword} ${menu} 노포 맛집 | 30년 손맛 진짜 장난 아니더라 리얼 후기
-
-# 출력 형식 (번호 + 제목만)
-1. [40~55자 입말체 제목]
-2. [40~55자 입말체 제목]
-3. [40~55자 입말체 제목]
-4. [40~55자 입말체 제목]
-5. [40~55자 입말체 제목]
-
-# 금지 사항
-❌ "편백찜 사브사브", "무한리필 즐기" 같은 딱딱한 표현
-❌ 인용부호(" ')
-❌ 40자 미만 짧은 제목
-❌ ~했다, ~이다 같은 문어체 종결어미
-❌ 이모지
-
-# 예시 (좋은 제목 vs 나쁜 제목)
-
-**❌ 나쁜 예**
-- 동탄역맛집 가족외식 키즈룸 편백찜 사브사브 무한리필 즐기 (35자, 딱딱함)
-- 동탄역맛집 주차 편한 가성비 끝판왕 사브사브 점심 추천 (32자, 짧고 딱딱함)
-
-**✅ 좋은 예**
-- 동탄역맛집 사브사브 후기 | 키즈룸에서 애들 놀리고 편백찜 먹었는데 완전 대박이네요 (46자, 자연스러움)
-- 동탄역맛집 가족외식 장소 추천 | 무한리필 사브사브 먹으러 갔다가 단골됐어요 진심 (44자, 입말체)
-- 동탄역맛집 사브사브 솔직후기.. 주차도 편하고 가성비까지 미쳤다는 이유 (42자, 자연스러움)
-
-**중요**: 참고 블로그 3개의 말투와 단어 선택을 완벽히 학습해서 똑같은 느낌으로 작성하세요. 딱딱한 제목은 절대 안 됩니다!
-
-지금 바로 제목 5개를 생성하세요.`;
-
-                const response = await fetch(getGeminiApiUrl(), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: {
-                            temperature: 0.9,
-                            topK: 40,
-                            topP: 0.95
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-
-                const generatedText = data.candidates[0].content.parts[0].text;
-                const titles = parseTitles(generatedText);
-                displayTitles(titles);
-            } catch (error) {
-                alert('제목 생성 중 오류 발생: ' + error.message);
-                document.getElementById('titleSection').classList.add('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '제목 5개 생성하기';
-            }
-        }
-
-        function parseTitles(text) {
-            const lines = text.split('\n').filter(line => line.trim());
-            const titles = [];
-            lines.forEach(line => {
-                const match = line.match(/^\d+\.\s*(.+)$/);
-                if (match) titles.push(match[0].trim());
-            });
-            return titles.length === 0 ? lines.slice(0, 5).map((l, i) => `${i+1}. ${l.trim()}`) : titles.slice(0, 5);
-        }
-
-        function displayTitles(titles) {
-            const titleList = document.getElementById('titleList');
-            titleList.innerHTML = '';
-            titles.forEach((title, index) => {
-                const titleItem = document.createElement('div');
-                titleItem.className = 'title-item';
-                titleItem.textContent = title;
-                titleItem.onclick = () => selectTitle(title, index);
-                titleList.appendChild(titleItem);
-            });
-            document.getElementById('selectedTitleDisplay').classList.add('hidden');
-            document.getElementById('generateContentBtn').classList.add('hidden');
-            selectedTitle = '';
-        }
-
-        function selectTitle(title, index) {
-            selectedTitle = title;
-            const items = document.querySelectorAll('.title-item');
-            items.forEach((item, i) => item.classList.toggle('selected', i === index));
-            document.getElementById('selectedTitleText').textContent = title.replace(/^\d+\.\s*/, '');
-            document.getElementById('selectedTitleDisplay').classList.remove('hidden');
-            document.getElementById('generateContentBtn').classList.remove('hidden');
-            document.getElementById('contentSection').classList.add('hidden');
-        }
-
-        async function generateContent() {
-            if (!selectedTitle) return;
-            const generateContentBtn = document.getElementById('generateContentBtn');
-            generateContentBtn.disabled = true;
-            generateContentBtn.textContent = '원고 생성 중...';
-            const contentResult = document.getElementById('contentResult');
-            contentResult.innerHTML = '<div class="loading">본문을 생성하고 있습니다. 잠시만 기다려주세요...</div>';
-            document.getElementById('contentSection').classList.remove('hidden');
-            document.getElementById('contentSection').scrollIntoView({ behavior: 'smooth' });
-
-            try {
-                const prompt = `# 역할
-당신은 네이버 블로그 검색 최적화(C-RANK, DIA)를 완벽히 이해한 맛집 전문 블로거입니다. 일반인이 작성한 듯한 자연스러운 후기를 작성합니다.
-
-# 절대 금지 사항
-❌ 이모지 사용 금지
-❌ 마크다운 문법 금지 (**, ##, ### 등)
-❌ AI 느낌 단어 금지: "훌륭한", "완벽한", "최고의", "멋진", "감탄을", "매력적인"
-❌ 딱딱한 문장: "~할 수 있습니다", "~하시기 바랍니다"
+const PROMPT_VERSIONS = {
+  natural: {
+    name: '해요체 친근 스타일',
+    description: '편하고 자연스러운 해요체. "진짜 맛있어요", "완전 강추해요", "또 오고 싶더라고요" 같은 일상 해요체 말투.',
+    buildTitlePrompt: buildUnifiedTitlePrompt,
+    buildContentPrompt: function(title, d) {
+      return `당신은 네이버 블로그 맛집 후기 작성 전문가입니다. 실제 방문한 동네 주민이 쓴 것 같은 자연스러운 해요체 후기를 작성합니다.
+${COMMON_FORBIDDEN}
 
 # 필수 작성 규칙
-1. **참고 블로그 매장 정보 파싱**: 아래 참고 블로그에서 주소, 영업시간, 주차, 가격대, 메뉴 구성 등을 추출하여 자연스럽게 포함
-2. **문체**: 친구한테 말하듯 편하게 (예: "진짜 맛있더라", "좀 기다렸는데", "완전 강추")
-3. **문단**: 3~4줄씩 짧게 나누기
-4. **강조**: <<텍스트>> 형식 사용 (예: <<존맛>>, <<가성비 미쳤음>>)
-5. **사진 위치**: (사진: 설명) 형식으로 5~7군데 자연스럽게 배치
-6. **분량**: 1800~2000자 필수 (절대 중간에 끊으면 안됨)
-7. **완결성**: 반드시 마무리 문장까지 완성해야 함
+1. 말투: 해요체 필수 (~했어요, ~이에요/예요, ~네요, ~거든요, ~더라고요, ~잖아요)
+   예시: "진짜 맛있어요", "완전 강추해요", "또 오고 싶더라고요", "여기 괜찮더라고요"
+2. 참고 블로그에서 주소, 영업시간, 주차, 가격대 등 실제 정보 추출해서 포함
+3. 문단: 3~4줄씩 짧게 끊기
+4. 강조: <<텍스트>> 형식 사용 (예: <<진짜 맛있어요>>, <<가성비 최고예요>>)
+5. 사진 위치: (사진: 설명) 형식으로 5~7군데 배치
+6. 분량: 1800자 이상 (반드시 마무리까지 완성)
 
-# 본문 구조 (이 순서대로 작성)
-1. **도입부 (200~250자)**: 방문 계기, 첫인상
-2. **매장 정보 (250~300자)**: 위치, 주차, 분위기 (참고 블로그에서 추출)
-3. **주문 과정 (200~250자)**: 메뉴 선택, 주문 경험
-4. **메뉴 리뷰 (600~700자)**: 맛, 비주얼, 특징 상세 설명
-5. **가격/서비스 (200~250자)**: 가성비, 직원 서비스, 추가 정보
-6. **마무리 (200~250자)**: 총평, 재방문 의사, 추천 대상
+# 본문 구조
+1. 도입부 (200자): 방문 계기, 첫인상 - 해요체로
+2. 매장 정보 (250자): 위치, 주차, 분위기
+3. 주문 과정 (200자): 메뉴 선택, 주문 경험
+4. 메뉴 리뷰 (650자): 맛, 비주얼, 특징 상세 - 구체적으로
+5. 가격/서비스 (200자): 가성비, 직원 서비스
+6. 마무리 (200자): 총평, 재방문 의사, 추천 대상
 
-# 참고 블로그 (매장 정보를 여기서 추출하세요)
-참고글 1: ${experienceData.ref1}
-
-참고글 2: ${experienceData.ref2}
-
-참고글 3: ${experienceData.ref3}
+# 참고 블로그
+참고글 1: ${d.ref1}
+참고글 2: ${d.ref2}
+참고글 3: ${d.ref3}
 
 # 선택한 제목
-${selectedTitle}
+${title}
 
-# 나의 방문 데이터
-- 작성 시점: ${experienceData.visitType === 'after' ? '다녀온 후 작성' : '가기 전 작성 (체험단)'}
-- 매장명: ${experienceData.storeName}
-- 방문 정보: ${experienceData.visitInfo}
-- 주문 메뉴: ${experienceData.menu}
-- 맛 특징: ${experienceData.tasteMemo}
+# 방문 데이터
+- 작성 시점: ${d.visitType === 'after' ? '다녀온 후 작성' : '가기 전 작성 (체험단)'}
+- 매장명: ${d.storeName}
+- 방문 정보: ${d.visitInfo}
+- 주문 메뉴: ${d.menu}
+- 맛/특징: ${d.tasteMemo}
 
-# 작성 예시 구조
+1800자 이상, 마무리까지 완성. 지금 바로 본문 작성하세요.`;
+    }
+  },
 
-${selectedTitle.replace(/^\d+\.\s*/, '')}
+  emotional: {
+    name: '해요체 감성 일상 스타일',
+    description: '따뜻하고 감성적이지만 몽환적이지 않은 해요체. 일상 속 소소한 행복을 담은 현실적인 감성 후기.',
+    buildTitlePrompt: buildUnifiedTitlePrompt,
+    buildContentPrompt: function(title, d) {
+      return `당신은 감성적인 맛집 블로거입니다. 몽환적 표현 없이 일상적이고 따뜻한 해요체로 현실감 있는 감성 후기를 씁니다.
+${COMMON_FORBIDDEN}
 
-[도입부 - 200~250자]
-주말에 가족들이랑 뭐 먹을까 하다가 오랜만에 샤브샤브가 확 당기는 거야. 요즘 이런 무한리필 집이 워낙 많아서 솔직히 어딜 가야 할지 고민될 때가 많잖아. 그러다 인스타에서 우연히 발견한 게 바로 여기더라.
+# 작성 스타일
+- 말투: 해요체 필수 (~했어요, ~이에요/예요, ~네요, ~거든요, ~더라고요)
+- 소소한 일상 감성 (자꾸 생각나요, 기분 좋더라고요, 또 오고 싶어요)
+- 함께한 사람과의 대화나 에피소드 자연스럽게 포함
+- 음식 맛은 구체적으로 묘사 (육즙이 있어요, 간이 딱 맞아요, 양이 많아요)
+- 강조: <<텍스트>> 형식 (예: <<정말 맛있어요>>, <<양이 넉넉해요>>)
+- 사진 위치: (사진: 설명) 형식으로 5~7군데
 
-(사진: 매장 외관)
+# 본문 구조 (1800자 이상)
+1. 도입 (200자): 방문하게 된 계기, 도착했을 때 느낌
+2. 매장 소개 (250자): 위치, 인테리어, 분위기 - 구체적으로
+3. 주문 (200자): 메뉴 선택 이유, 주문 과정
+4. 음식 후기 (650자): 맛, 양, 식감 등 구체적으로
+5. 소소한 디테일 (200자): 서비스, 편의시설, 재방문 이유
+6. 마무리 (200자): 솔직한 총평, 추천 대상, 재방문 의사
 
-[매장 정보 - 250~300자]
-위치는 ○○역에서 도보 5분 정도 거리고, 주차는 건물 지하에 2시간 무료래. 매장 들어가자마자 느낌이 딱 오더라. 테이블 간격도 넉넉하고 키즈룸도 따로 있어서 애들 데리고 오기 딱 좋아 보였어.
+# 참고 블로그
+${d.ref1}
+${d.ref2}
+${d.ref3}
 
-[주문 과정 - 200~250자]
-메뉴판 보니까 무한리필이 1인 2만원대인데 이 가격에 이 정도면 가성비 괜찮다 싶더라. 우리는 샤브샤브랑 편백찜 세트로 시켰어.
+# 제목: ${title}
+# 정보: 매장명 ${d.storeName} / 메뉴 ${d.menu} / ${d.visitInfo} / ${d.tasteMemo}
+# 작성 시점: ${d.visitType === 'after' ? '다녀온 후' : '체험단 방문 전'}
 
-(사진: 메뉴판)
+1800자 이상 완성. 지금 바로 작성하세요.`;
+    }
+  },
 
-[메뉴 리뷰 - 600~700자]
-일단 샤브샤브 육수가 진하더라. 보통 이런 무한리필은 육수가 좀 밍밍한 경우가 많은데 여기는 진짜 <<제대로 우린 육수>> 느낌이었어. 고기도 계속 리필해줬는데 품질이 괜찮았어.
+  informative: {
+    name: '해요체 정보형 리뷰 스타일',
+    description: '위치, 가격, 메뉴 등 실용 정보 중심의 해요체 리뷰. 독자가 바로 활용할 수 있는 구체적인 정보 제공.',
+    buildTitlePrompt: buildUnifiedTitlePrompt,
+    buildContentPrompt: function(title, d) {
+      return `당신은 맛집 정보 전문 블로거입니다. 독자가 실제로 방문할 때 도움 되는 구체적인 정보를 해요체로 전달합니다.
+${COMMON_FORBIDDEN}
 
-(사진: 샤브샤브 육수)
+# 작성 스타일
+- 말투: 해요체 필수 (~했어요, ~이에요/예요, ~네요, ~거든요, ~더라고요)
+- 위치, 주차, 영업시간, 가격 등 실용 정보 정확하게
+- 메뉴별 상세 리뷰 (맛, 양, 가성비 구체적으로)
+- 장단점 솔직하게 (단점도 한두 가지 언급하면 신뢰도 올라가요)
+- 강조: <<텍스트>> 형식 (예: <<주차 무료예요>>, <<웨이팅 30분 각오>>)
+- 사진 위치: (사진: 설명) 5~7군데
 
-편백찜은 진짜 압권이었지. 편백나무 향이 확 올라오면서 고기 익는 소리 듣고 있으면 군침 돌 수밖에 없더라. 직원분이 직접 구워주셔서 우리는 그냥 먹기만 하면 되니까 완전 편했어.
+# 본문 구조 (1800자 이상)
+1. 매장 기본 정보 (250자): 위치, 교통, 주차, 영업시간, 가격대 - 구체적 수치 포함
+2. 방문 배경 (150자): 방문 계기, 대기 상황
+3. 메뉴 구성 (200자): 메뉴판 소개, 선택한 이유
+4. 메뉴 상세 리뷰 (650자): 각 메뉴별 맛, 양, 특징 상세하게
+5. 서비스/편의시설 (200자): 직원 서비스, 청결, 화장실, 키즈존 등
+6. 총평 (200자): 추천 대상, 재방문 의향, 별점 요약
 
-(사진: 편백찜)
+# 참고 블로그 (실제 정보 추출)
+${d.ref1}
+${d.ref2}
+${d.ref3}
 
-밑반찬도 계속 리필해주고, 특히 <<명이나물이랑 부추절임>> 완전 내 스타일이더라. 이런 밑반찬 하나하나가 신경 쓴 게 느껴져.
+# 제목: ${title}
+# 정보: 매장명 ${d.storeName} / 메뉴 ${d.menu} / ${d.visitInfo} / ${d.tasteMemo}
+# 작성 시점: ${d.visitType === 'after' ? '다녀온 후' : '체험단 방문 전'}
 
-(사진: 밑반찬)
+1800자 이상 완성. 지금 바로 작성하세요.`;
+    }
+  },
 
-[가격/서비스 - 200~250자]
-2시간 무한리필인데 충분히 배부르게 먹을 수 있었어. 직원분들도 친절하시고 리필도 계속 잘 챙겨주셨어. 이 가격에 이 퀄리티면 진짜 가성비 미쳤다고 봐.
+  experience: {
+    name: '해요체 자연 방문 스타일',
+    description: '직접 찾아간 일반 방문자처럼 작성. 체험단/협찬/광고 느낌 완전 배제, 순수한 개인 방문 후기 형식.',
+    buildTitlePrompt: buildUnifiedTitlePrompt,
+    buildContentPrompt: function(title, d) {
+      return `당신은 맛집을 직접 찾아다니는 일반 블로거입니다. 그냥 밥 먹으러 갔다가 맛있어서 후기 남기는 평범한 사람처럼 써야 합니다.
+${COMMON_FORBIDDEN}
 
-(사진: 전체 테이블)
+# 절대 금지 (이 스타일 전용 추가 금지어)
+- 체험단, 협찬, 협찬받아, 초대, 제공받은, 무료로, 서포터즈, 리뷰어, 방문단, 광고, 유료광고, 소정의 혜택 - 이 단어들 중 하나라도 나오면 완전히 다시 쓸 것
+- "솔직하게 써볼게요", "진솔하게", "협찬이지만" 같은 면죄부성 표현 금지
+- 과도한 칭찬 나열 금지 (맛있고 분위기도 좋고 서비스도 좋고... 이런 식 금지)
 
-[마무리 - 200~250자]
-요즘 무한리필 맛집 찾기 쉽지 않은데 여기는 진짜 인정이더라. 다음에 또 올 것 같아. 가족들 다 만족했고 나도 완전 만족. 주말에 가족외식 장소 고민된다면 여기 강추!
+# 작성 원칙 (이게 핵심)
+- 지인 추천을 받아서, 인스타에서 보고, 근처 지나다가, 예전에 한번 왔다가 등 자연스러운 방문 계기 활용
+- 말투: 해요체 (~했어요, ~이에요/예요, ~네요, ~거든요, ~더라고요, ~잖아요)
+- 아쉬운 점 한두 가지 솔직하게 포함 (완벽한 후기는 광고처럼 보여요)
+- 개인적인 취향이나 소소한 에피소드 자연스럽게 넣기 (저는 매운 거 잘 못하는데, 같이 간 친구가 등)
+- 가격, 위치, 주차 등 실용 정보도 자연스럽게 포함
+- 강조: <<텍스트>> 형식 (예: <<여기 이거 진짜 맛있어요>>, <<주차가 좀 불편해요>>)
+- 사진 위치: (사진: 설명) 5~7군데
 
-# 중요 체크리스트
-✅ 1800~2000자 완성했는가?
-✅ 마무리 문장까지 완결했는가?
-✅ 참고 블로그에서 매장 정보 추출했는가?
-✅ AI 느낌 단어 없는가?
-✅ 친구한테 말하듯 자연스러운가?
-✅ 강조 <<텍스트>> 3~5개 사용했는가?
-✅ (사진: 설명) 5~7개 배치했는가?
+# 본문 구조 (1800자 이상)
+1. 방문 계기 (200자): 지인 추천, SNS에서 봤거나, 근처 지나다가 등 자연스러운 이유
+2. 매장 소개 (250자): 위치, 주차, 분위기 - 솔직하게 (단점 있으면 포함)
+3. 주문 과정 (200자): 메뉴판 보고 고민한 과정, 선택한 이유
+4. 음식 후기 (650자): 맛, 양, 식감 구체적으로 - 좋은 점 위주지만 아쉬운 점도 1~2개
+5. 주변 정보 (200자): 함께 온 사람, 대기, 서비스 등 현장 느낌
+6. 마무리 (200자): 또 올지, 누구한테 추천할지, 솔직한 총평
 
-**절대**: 중간에 끊지 말고 반드시 마무리까지 완성하세요. 1800자 이상 필수입니다.
+# 참고 블로그
+${d.ref1}
+${d.ref2}
+${d.ref3}
 
-지금 바로 본문을 작성하세요.`;
+# 제목: ${title}
+# 정보: 매장명 ${d.storeName} / 메뉴 ${d.menu} / ${d.visitInfo} / ${d.tasteMemo}
+# 작성 시점: ${d.visitType === 'after' ? '다녀온 후' : '방문 예정 (사전 조사 후기 형식으로)'}
 
-                const response = await fetch(getGeminiApiUrl(), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: {
-                            temperature: 0.8,
-                            topK: 40,
-                            topP: 0.9,
-                            maxOutputTokens: 10000
-                        }
-                    })
-                });
+1800자 이상, 일반 방문자처럼 자연스럽게 완성. 지금 바로 작성하세요.`;
+    }
+  }
+};
 
-                const data = await response.json();
-                const generatedText = data.candidates[0].content.parts[0].text;
-                
-                function convertHighlightToHTML(text) {
-                    text = text.replace(/<<([^>>]+)>>/g, '<strong>$1</strong>');
-                    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-                    text = text.replace(/\n/g, '<br>');
-                    return text;
-                }
-                
-                contentResult.innerHTML = convertHighlightToHTML(generatedText);
-            } catch (error) {
-                alert('본문 생성 오류: ' + error.message);
-            } finally {
-                generateContentBtn.disabled = false;
-                generateContentBtn.textContent = '포스팅 원고 생성하기';
-            }
-        }
+// ============================================================
+// Gemini API 호출 (gemini-2.5-flash 고정)
+// ============================================================
+function getGeminiApiUrl() {
+  if (!GEMINI_API_KEY) throw new Error('API 키가 설정되지 않았습니다. 설정 화면에서 Gemini API 키를 입력하고 저장하세요.');
+  return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+}
 
-        function resetAll() {
-            if (confirm('모든 내용을 초기화하시겠습니까?')) location.reload();
-        }
+async function callGemini(prompt, temperature, maxTokens) {
+  temperature = temperature || 0.9;
+  maxTokens = maxTokens || 8192;
+  const response = await fetch(getGeminiApiUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: temperature, topK: 40, topP: 0.95, maxOutputTokens: maxTokens }
+    })
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates[0].content.parts[0].text;
+}
 
-        function resetTitles() {
-            document.getElementById('titleSection').classList.add('hidden');
-            document.getElementById('contentSection').classList.add('hidden');
-            selectedTitle = '';
-        }
+// ============================================================
+// 설정 관리
+// ============================================================
+function loadSettings() {
+  const savedKey = localStorage.getItem('gemini_api_key');
+  if (savedKey) {
+    GEMINI_API_KEY = savedKey;
+    document.getElementById('apiKeyInput').value = savedKey;
+  }
+  const savedPrompt = localStorage.getItem('prompt_version') || 'natural';
+  document.getElementById('promptVersion').value = savedPrompt;
+  const savedVisitType = localStorage.getItem('visit_type') || 'after';
+  document.getElementById('visitTypeSelect').value = savedVisitType;
+  updatePromptDescription();
+}
 
-        function copyContent() {
-            const content = document.getElementById('contentResult').innerText;
-            navigator.clipboard.writeText(content).then(() => alert('클립보드에 복사되었습니다!'));
-        }
+function saveSettings() {
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (apiKey) {
+    GEMINI_API_KEY = apiKey;
+    localStorage.setItem('gemini_api_key', apiKey);
+  }
+  const promptVersion = document.getElementById('promptVersion').value;
+  localStorage.setItem('prompt_version', promptVersion);
+  const visitType = document.getElementById('visitTypeSelect').value;
+  localStorage.setItem('visit_type', visitType);
+  showApiKeyStatus('설정이 저장되었습니다.', 'success');
+  setTimeout(() => navigateTo('screen-home'), 1200);
+}
 
-        async function autoCollectBlogPosts() {
-            const storeName = document.getElementById('storeName').value.trim();
-            if (!storeName) { alert('매장명을 입력해주세요.'); return; }
-            const btn = document.getElementById('autoCollectBtn');
-            btn.disabled = true; btn.textContent = '검색 중...';
-            try {
-                const searchQuery = encodeURIComponent(storeName);
-                const searchUrl = `https://search.naver.com/search.naver?where=post&query=${searchQuery}`;
-                const html = await fetchWithProxy(searchUrl);
-                const urls = extractBlogUrlsFromSearch(html);
-                if (urls.length === 0) throw new Error('블로그를 찾지 못했습니다.');
-                for (let i = 0; i < Math.min(urls.length, 3); i++) {
-                    document.getElementById(`blogUrl${i+1}`).value = urls[i];
-                    await crawlBlogToTextareaInternal(i+1, urls[i]);
-                }
-                alert('자동 수집 완료!');
-            } catch (error) { alert(error.message); }
-            finally { btn.disabled = false; btn.textContent = '자동 수집'; }
-        }
+function toggleApiKeyVisibility() {
+  const input = document.getElementById('apiKeyInput');
+  const icon = document.getElementById('apiKeyVisIcon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
 
-        function openNaverSearch() {
-            const name = document.getElementById('storeName').value.trim();
-            if (name) window.open(`https://search.naver.com/search.naver?where=post&query=${encodeURIComponent(name)}`, '_blank');
-        }
+function showApiKeyStatus(message, type) {
+  const el = document.getElementById('apiKeyStatus');
+  el.className = 'text-xs px-3 py-2 rounded-lg ' + (type === 'success'
+    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+    : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400');
+  el.textContent = message;
+  el.classList.remove('hidden');
+  if (type === 'success') setTimeout(() => el.classList.add('hidden'), 3000);
+}
 
-        function extractBlogUrlsFromSearch(html) {
-            const urls = [];
-            const matches = html.matchAll(/https?:\/\/blog\.naver\.com\/[^\/\s"']+\/\d+/g);
-            for (const match of matches) {
-                if (!urls.includes(match[0])) urls.push(match[0]);
-                if (urls.length >= 3) break;
-            }
-            return urls;
-        }
+function updatePromptDescription() {
+  const version = document.getElementById('promptVersion').value;
+  const desc = (PROMPT_VERSIONS[version] || PROMPT_VERSIONS.natural).description;
+  document.getElementById('promptDescription').textContent = desc;
+}
 
-        async function crawlBlogToTextareaInternal(num, url) {
-            const textarea = document.getElementById(`reference${num}`);
-            let targetUrl = url.replace('blog.naver.com/', 'm.blog.naver.com/');
-            const html = await fetchWithProxy(targetUrl);
-            const content = parseBlogContent(html);
-            textarea.value = content || '내용 추출 실패';
-        }
+function downloadConfig() {
+  const apiKey = document.getElementById('apiKeyInput').value.trim() || GEMINI_API_KEY;
+  if (!apiKey) { alert('저장할 API 키가 없습니다.'); return; }
+  const config = {
+    gemini_api_key: apiKey,
+    gemini_model: GEMINI_MODEL,
+    prompt_version: document.getElementById('promptVersion').value,
+    visit_type: document.getElementById('visitTypeSelect').value,
+    saved_at: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'chaewumi_config.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
 
-        async function crawlBlogToTextarea(num) {
-            const url = document.getElementById(`blogUrl${num}`).value.trim();
-            if (!url) return;
-            const btn = event.target;
-            btn.disabled = true; btn.textContent = '수집 중...';
-            try { await crawlBlogToTextareaInternal(num, url); alert('수집 성공!'); }
-            catch (e) { alert(e.message); }
-            finally { btn.disabled = false; btn.textContent = '수집'; }
-        }
+function loadConfigFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const config = JSON.parse(e.target.result);
+      if (config.gemini_api_key) {
+        GEMINI_API_KEY = config.gemini_api_key;
+        document.getElementById('apiKeyInput').value = config.gemini_api_key;
+        localStorage.setItem('gemini_api_key', config.gemini_api_key);
+      }
+      if (config.prompt_version) {
+        document.getElementById('promptVersion').value = config.prompt_version;
+        localStorage.setItem('prompt_version', config.prompt_version);
+      }
+      if (config.visit_type) {
+        document.getElementById('visitTypeSelect').value = config.visit_type;
+        localStorage.setItem('visit_type', config.visit_type);
+      }
+      updatePromptDescription();
+      showApiKeyStatus('설정 파일이 로드되었습니다.', 'success');
+    } catch (err) { alert('설정 파일을 읽는 중 오류가 발생했습니다.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
 
-        async function fetchWithProxy(url) {
-            for (const proxy of CORS_PROXIES) {
-                try {
-                    const response = await fetch(proxy + encodeURIComponent(url));
-                    if (response.ok) return await response.text();
-                } catch (e) { continue; }
-            }
-            throw new Error('프록시 연결 실패');
-        }
+// ============================================================
+// 화면 전환
+// ============================================================
+function navigateTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const isActive = item.dataset.screen === screenId;
+    item.querySelectorAll('span, p').forEach(el => {
+      if (isActive) { el.classList.add('text-primary'); el.classList.remove('text-slate-400'); }
+      else { el.classList.remove('text-primary'); el.classList.add('text-slate-400'); }
+    });
+  });
+  window.scrollTo(0, 0);
+}
 
-        function parseBlogContent(html) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const element = doc.querySelector('.se_component_wrap, .se-main-container, .post-view');
-            return element ? element.innerText.replace(/\s+/g, ' ').trim() : null;
-        }
-    </script>
+function goToCrawl() {
+  const keyword = document.getElementById('mainKeyword').value.trim();
+  if (!keyword) {
+    alert('메인 키워드를 입력해주세요.');
+    document.getElementById('mainKeyword').focus();
+    return;
+  }
+  navigateTo('screen-crawl');
+}
+
+// ============================================================
+// 탭 전환
+// ============================================================
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('border-primary', 'text-primary');
+    b.classList.add('border-transparent', 'text-slate-500');
+  });
+  btn.classList.add('border-primary', 'text-primary');
+  btn.classList.remove('border-transparent', 'text-slate-500');
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.getElementById(tabId).style.display = 'flex';
+}
+
+// ============================================================
+// 블로그 크롤링
+// ============================================================
+async function fetchWithProxy(url) {
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      const response = await fetch(proxy + encodeURIComponent(url), { signal: controller.signal });
+      clearTimeout(timer);
+      if (response.ok) return await response.text();
+    } catch (e) { continue; }
+  }
+  throw new Error('모든 프록시 연결에 실패했습니다. 직접 내용을 입력해주세요.');
+}
+
+function parseBlogContent(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const selectors = ['.se-main-container', '.se_component_wrap', '.post-view', '#postViewArea', '.blog-post'];
+  for (const sel of selectors) {
+    const el = doc.querySelector(sel);
+    if (el) return el.innerText.replace(/\s+/g, ' ').trim().substring(0, 3000);
+  }
+  return (doc.body && doc.body.innerText) ? doc.body.innerText.replace(/\s+/g, ' ').trim().substring(0, 3000) : null;
+}
+
+function extractBlogUrlsFromSearch(html) {
+  const urls = [];
+  const matches = html.matchAll(/https?:\/\/blog\.naver\.com\/[^\/\s"'<>]+\/\d+/g);
+  for (const match of matches) {
+    if (!urls.includes(match[0])) urls.push(match[0]);
+    if (urls.length >= 3) break;
+  }
+  return urls;
+}
+
+function openNaverSearch() {
+  const name = document.getElementById('storeName').value.trim() || document.getElementById('mainKeyword').value.trim();
+  if (name) window.open('https://search.naver.com/search.naver?where=post&query=' + encodeURIComponent(name), '_blank');
+  else alert('매장명 또는 메인 키워드를 먼저 입력해주세요.');
+}
+
+async function autoCollectBlogPosts() {
+  const storeName = document.getElementById('storeName').value.trim();
+  const keyword = document.getElementById('mainKeyword').value.trim();
+  const query = storeName || keyword;
+  if (!query) { alert('매장명 또는 메인 키워드를 먼저 입력해주세요.'); return; }
+
+  const btn = document.getElementById('autoCollectBtn');
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> 수집 중...';
+  btn.disabled = true;
+
+  try {
+    const searchUrl = 'https://search.naver.com/search.naver?where=post&query=' + encodeURIComponent(query);
+    const html = await fetchWithProxy(searchUrl);
+    const urls = extractBlogUrlsFromSearch(html);
+    if (urls.length === 0) throw new Error('블로그를 찾지 못했습니다. 우측 상단 버튼으로 직접 검색해주세요.');
+
+    for (let i = 0; i < Math.min(urls.length, 3); i++) {
+      document.getElementById('blogUrl' + (i + 1)).value = urls[i];
+      try { await crawlBlogToTextareaInternal(i + 1, urls[i]); }
+      catch (e) { document.getElementById('reference' + (i + 1)).value = '수집 실패 - 직접 입력해주세요.'; }
+    }
+    alert('자동 수집 완료! ' + Math.min(urls.length, 3) + '개 블로그를 수집했습니다.');
+  } catch (error) {
+    alert('자동 수집 실패: ' + error.message);
+  } finally {
+    btn.innerHTML = origHTML;
+    btn.disabled = false;
+  }
+}
+
+async function crawlBlogToTextareaInternal(num, url) {
+  const targetUrl = url.replace('blog.naver.com/', 'm.blog.naver.com/');
+  const html = await fetchWithProxy(targetUrl);
+  const content = parseBlogContent(html);
+  document.getElementById('reference' + num).value = content || '내용 추출 실패 - 직접 입력해주세요.';
+}
+
+async function crawlBlogToTextarea(num) {
+  const url = document.getElementById('blogUrl' + num).value.trim();
+  if (!url) { alert('블로그 URL을 입력해주세요.'); return; }
+
+  const btn = document.getElementById('crawlBtn' + num);
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span>';
+  btn.disabled = true;
+
+  try {
+    await crawlBlogToTextareaInternal(num, url);
+  } catch (e) {
+    alert('수집 실패: ' + e.message);
+  } finally {
+    btn.innerHTML = origHTML;
+    btn.disabled = false;
+  }
+}
+
+// ============================================================
+// 제목 생성
+// ============================================================
+async function generateTitles() {
+  const keyword = document.getElementById('mainKeyword').value.trim();
+  if (!keyword) { alert('메인 화면에서 메인 키워드를 먼저 입력해주세요.'); return; }
+
+  const promptVersion = localStorage.getItem('prompt_version') || 'natural';
+  const visitType = localStorage.getItem('visit_type') || 'after';
+
+  const data = {
+    keyword: keyword,
+    storeName: document.getElementById('storeName').value.trim(),
+    menu: document.getElementById('menuInput').value.trim(),
+    tasteMemo: document.getElementById('tasteMemo').value.trim(),
+    visitInfo: document.getElementById('visitInfo').value.trim(),
+    ref1: document.getElementById('reference1').value.trim(),
+    ref2: document.getElementById('reference2').value.trim(),
+    ref3: document.getElementById('reference3').value.trim(),
+    visitType: visitType,
+    promptVersion: promptVersion
+  };
+  experienceData = data;
+
+  const btn = document.getElementById('generateTitlesBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>&nbsp;제목 생성 중...';
+
+  const titleList = document.getElementById('titleList');
+  titleList.innerHTML = '<p class="text-sm text-slate-400 text-center py-8 animate-pulse">AI가 제목을 생성하고 있습니다...</p>';
+  document.getElementById('titleCountBadge').classList.remove('hidden');
+  document.getElementById('goToDraftBtn').classList.add('hidden');
+
+  try {
+    const version = PROMPT_VERSIONS[promptVersion] || PROMPT_VERSIONS.natural;
+    const prompt = version.buildTitlePrompt(data);
+    const generatedText = await callGemini(prompt, 0.9, 4096);
+    const titles = parseTitles(generatedText);
+    displayTitles(titles);
+    document.getElementById('titleCountBadge').textContent = 'TOP ' + titles.length;
+  } catch (error) {
+    titleList.innerHTML = '<p class="text-sm text-red-400 text-center py-4">오류: ' + error.message + '</p>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined">magic_button</span>&nbsp;최적화된 제목 생성하기';
+  }
+}
+
+function parseTitles(text) {
+  var lines = text.split('\n').map(function(l) { return l.trim(); });
+  var results = [];
+  for (var i = 0; i < lines.length; i++) {
+    var match = lines[i].match(/^\d+\.\s*(.+)$/);
+    if (match) {
+      var obj = { title: match[1].trim(), chars: '', type: '', point: '' };
+      for (var j = i + 1; j < Math.min(i + 5, lines.length); j++) {
+        if (/^\d+\./.test(lines[j])) break;
+        var cm = lines[j].match(/\(글자수:\s*(.+?)\)/);
+        var tm = lines[j].match(/\(유형:\s*(.+?)\)/);
+        var pm = lines[j].match(/\(포인트:\s*(.+?)\)/);
+        if (cm) obj.chars = cm[1].trim();
+        if (tm) obj.type = tm[1].trim();
+        if (pm) obj.point = pm[1].trim();
+      }
+      results.push(obj);
+      if (results.length >= 10) break;
+    }
+  }
+  if (results.length === 0) {
+    return lines.filter(function(l) { return l.length > 5; }).slice(0, 10).map(function(l) {
+      return { title: l, chars: '', type: '', point: '' };
+    });
+  }
+  return results;
+}
+
+function displayTitles(titles) {
+  var titleList = document.getElementById('titleList');
+  titleList.innerHTML = '';
+  titles.forEach(function(item, index) {
+    var num = String(index + 1).padStart(2, '0');
+    var titleText = item.title || item;
+    var div = document.createElement('div');
+    div.className = 'title-item group p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors cursor-pointer';
+
+    var metaHtml = '';
+    if (item.chars || item.type) {
+      metaHtml += '<div class="flex gap-2 mt-2 flex-wrap">';
+      if (item.chars) metaHtml += '<span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded">' + item.chars + '</span>';
+      if (item.type) metaHtml += '<span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded font-medium">' + item.type + '</span>';
+      metaHtml += '</div>';
+    }
+    if (item.point) {
+      metaHtml += '<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">' + item.point + '</p>';
+    }
+
+    div.innerHTML =
+      '<div class="flex items-start gap-3">' +
+        '<span class="text-primary font-bold mt-0.5 shrink-0">' + num + '</span>' +
+        '<div class="flex-1">' +
+          '<p class="text-sm font-medium leading-tight text-slate-900 dark:text-slate-100">' + titleText + '</p>' +
+          metaHtml +
+        '</div>' +
+        '<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors shrink-0 mt-0.5">content_copy</span>' +
+      '</div>';
+    div.onclick = (function(el, t) { return function() { selectTitleItem(el, t); }; })(div, titleText);
+    titleList.appendChild(div);
+  });
+}
+
+function selectTitleItem(el, title) {
+  document.querySelectorAll('.title-item').forEach(function(item) {
+    item.classList.remove('border-2', 'border-primary', 'bg-primary/5');
+    item.classList.add('border', 'border-slate-200');
+    var icon = item.querySelector('.material-symbols-outlined:last-child');
+    if (icon) { icon.textContent = 'content_copy'; icon.classList.remove('text-primary'); icon.classList.add('text-slate-400'); }
+  });
+  el.classList.add('border-2', 'border-primary', 'bg-primary/5');
+  el.classList.remove('border', 'border-slate-200');
+  var icon = el.querySelector('.material-symbols-outlined:last-child');
+  if (icon) { icon.textContent = 'check_circle'; icon.classList.add('text-primary'); icon.classList.remove('text-slate-400'); }
+
+  selectedTitleText = title;
+  var display = document.getElementById('selectedTitleDisplay');
+  display.textContent = title;
+  display.classList.remove('text-slate-400', 'dark:text-slate-500');
+  document.getElementById('goToDraftBtn').classList.remove('hidden');
+}
+
+// ============================================================
+// 본문 생성
+// ============================================================
+async function generateContent() {
+  if (!selectedTitleText) {
+    alert('먼저 크롤링 화면에서 제목을 선택해주세요.');
+    navigateTo('screen-crawl');
+    return;
+  }
+
+  const btn = document.getElementById('generateContentBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>&nbsp;<span>초안 생성 중...</span>';
+
+  const contentResult = document.getElementById('contentResult');
+  contentResult.innerHTML = '<p class="text-slate-400 text-center py-8 italic animate-pulse">본문을 생성하고 있습니다. 잠시만 기다려주세요...</p>';
+
+  try {
+    const version = PROMPT_VERSIONS[experienceData.promptVersion] || PROMPT_VERSIONS.natural;
+    const prompt = version.buildContentPrompt(selectedTitleText, experienceData);
+    const generatedText = await callGemini(prompt, 0.8, 10000);
+    contentResult.innerHTML = convertToHTML(generatedText);
+  } catch (error) {
+    contentResult.innerHTML = '<p class="text-red-400 text-center py-4">오류: ' + error.message + '</p>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span>&nbsp;<span>초안 생성하기</span>';
+  }
+}
+
+function convertToHTML(text) {
+  text = text.replace(/<<([^>>]+)>>/g, '<strong class="font-bold text-slate-900 dark:text-slate-100">$1</strong>');
+  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  var paragraphs = text.split(/\n\n+/);
+  return paragraphs.map(function(p) {
+    return '<p class="mb-4">' + p.replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+}
+
+function copyContent() {
+  var content = document.getElementById('contentResult').innerText;
+  if (!content || content.includes('초안 생성하기 버튼을')) {
+    alert('먼저 초안을 생성해주세요.');
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(content).then(showCopyNotice).catch(fallbackCopy.bind(null, content));
+  } else {
+    fallbackCopy(content);
+  }
+}
+
+function fallbackCopy(text) {
+  var el = document.createElement('textarea');
+  el.value = text;
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  showCopyNotice();
+}
+
+function showCopyNotice() {
+  var notice = document.getElementById('copyNotice');
+  notice.classList.remove('hidden');
+  setTimeout(function() { notice.classList.add('hidden'); }, 3000);
+}
+
+// ============================================================
+// 초기화
+// ============================================================
+window.addEventListener('DOMContentLoaded', function() {
+  loadSettings();
+  // 초기 탭 설정
+  document.querySelectorAll('.tab-content').forEach(function(t, i) {
+    t.style.display = i === 0 ? 'flex' : 'none';
+  });
+});
+</script>
+
 </body>
 </html>
