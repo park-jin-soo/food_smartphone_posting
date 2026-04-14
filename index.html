@@ -155,6 +155,9 @@
         <div id="tab1" class="tab-content flex flex-col gap-3">
           <div class="flex gap-2">
             <input id="blogUrl1" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="openBlogUrl(1)" class="px-2.5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center" title="블로그 열기">
+              <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </button>
             <button onclick="crawlBlogToTextarea(1)" id="crawlBtn1" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">download</span>수집
             </button>
@@ -162,11 +165,14 @@
           <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">description</span>블로그 1 내용
           </label>
-          <textarea id="reference1" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+          <textarea id="reference1" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="수집 실패 시: 블로그를 직접 열어서 본문 내용을 여기에 붙여넣으세요"></textarea>
         </div>
         <div id="tab2" class="tab-content flex flex-col gap-3">
           <div class="flex gap-2">
             <input id="blogUrl2" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="openBlogUrl(2)" class="px-2.5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center" title="블로그 열기">
+              <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </button>
             <button onclick="crawlBlogToTextarea(2)" id="crawlBtn2" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">download</span>수집
             </button>
@@ -174,11 +180,14 @@
           <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">description</span>블로그 2 내용
           </label>
-          <textarea id="reference2" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+          <textarea id="reference2" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="수집 실패 시: 블로그를 직접 열어서 본문 내용을 여기에 붙여넣으세요"></textarea>
         </div>
         <div id="tab3" class="tab-content flex flex-col gap-3">
           <div class="flex gap-2">
             <input id="blogUrl3" type="text" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-slate-400" placeholder="https://blog.naver.com/..."/>
+            <button onclick="openBlogUrl(3)" class="px-2.5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-xl text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center" title="블로그 열기">
+              <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </button>
             <button onclick="crawlBlogToTextarea(3)" id="crawlBtn3" class="px-3 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors whitespace-nowrap flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">download</span>수집
             </button>
@@ -186,7 +195,7 @@
           <label class="text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">description</span>블로그 3 내용
           </label>
-          <textarea id="reference3" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="URL 입력 후 수집 버튼 클릭 또는 직접 입력"></textarea>
+          <textarea id="reference3" class="w-full h-32 rounded-xl bg-slate-100 dark:bg-slate-900 border-none ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary p-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 transition-all placeholder:text-slate-400 resize-none" placeholder="수집 실패 시: 블로그를 직접 열어서 본문 내용을 여기에 붙여넣으세요"></textarea>
         </div>
       </div>
     </section>
@@ -368,13 +377,17 @@
 // ============================================================
 // 상수 (절대 변경 금지)
 // ============================================================
-const GEMINI_MODEL = 'gemini-2.5-flash';
-const CORS_PROXIES = [
-  'https://api.allorigins.win/raw?url=',
-  'https://corsproxy.io/?',
-  'https://cors-anywhere.herokuapp.com/',
-  'https://api.codetabs.com/v1/proxy?quest=',
-  'https://thingproxy.freeboard.io/fetch/'
+const GEMINI_MODEL = 'gemini-2.5-flash-preview-04-17';
+
+// 프록시 설정 (encode: URL 인코딩 여부, parse: 응답 파싱 방식)
+const CORS_PROXY_CONFIGS = [
+  { prefix: 'https://api.allorigins.win/get?url=',          encode: true,  parse: 'allorigins' },
+  { prefix: 'https://api.allorigins.win/raw?url=',          encode: true,  parse: 'text' },
+  { prefix: 'https://corsproxy.io/?url=',                   encode: true,  parse: 'text' },
+  { prefix: 'https://corsproxy.io/?',                       encode: false, parse: 'text' },
+  { prefix: 'https://api.codetabs.com/v1/proxy?quest=',     encode: true,  parse: 'text' },
+  { prefix: 'https://thingproxy.freeboard.io/fetch/',       encode: false, parse: 'text' },
+  { prefix: 'https://yacdn.org/proxy/',                     encode: false, parse: 'text' },
 ];
 
 // ============================================================
@@ -631,17 +644,58 @@ function getGeminiApiUrl() {
 async function callGemini(prompt, temperature, maxTokens) {
   temperature = temperature || 0.9;
   maxTokens = maxTokens || 8192;
-  const response = await fetch(getGeminiApiUrl(), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: temperature, topK: 40, topP: 0.95, maxOutputTokens: maxTokens }
-    })
-  });
-  const data = await response.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.candidates[0].content.parts[0].text;
+
+  const MAX_RETRIES = 3;
+  const RETRY_DELAYS = [3000, 6000, 10000]; // 3초, 6초, 10초 간격
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(getGeminiApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: temperature, topK: 40, topP: 0.95, maxOutputTokens: maxTokens }
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        const msg = data.error.message || '';
+        // 과부하/일시적 오류면 재시도
+        const isRetryable = msg.includes('high demand') || msg.includes('overloaded') ||
+                            msg.includes('503') || msg.includes('quota') ||
+                            response.status === 503 || response.status === 429;
+
+        if (isRetryable && attempt < MAX_RETRIES) {
+          const delay = RETRY_DELAYS[attempt];
+          const retryMsg = `서버 과부하로 ${delay/1000}초 후 재시도합니다... (${attempt+1}/${MAX_RETRIES})`;
+          // 진행 중인 버튼 텍스트 업데이트
+          const btn = document.getElementById('generateTitlesBtn') || document.getElementById('generateContentBtn');
+          if (btn) btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>&nbsp;' + retryMsg;
+          await new Promise(r => setTimeout(r, delay));
+          continue;
+        }
+        throw new Error(msg);
+      }
+
+      if (!data.candidates || !data.candidates[0]) {
+        throw new Error('응답이 없습니다. 잠시 후 다시 시도해주세요.');
+      }
+
+      return data.candidates[0].content.parts[0].text;
+
+    } catch (e) {
+      if (attempt === MAX_RETRIES) throw e;
+      // 네트워크 오류도 재시도
+      if (e.name === 'TypeError' || e.message.includes('fetch')) {
+        await new Promise(r => setTimeout(r, RETRY_DELAYS[attempt]));
+        continue;
+      }
+      throw e;
+    }
+  }
 }
 
 // ============================================================
@@ -791,27 +845,62 @@ function switchTab(btn, tabId) {
 // 블로그 크롤링
 // ============================================================
 async function fetchWithProxy(url) {
-  for (const proxy of CORS_PROXIES) {
+  for (const cfg of CORS_PROXY_CONFIGS) {
     try {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 8000);
-      const response = await fetch(proxy + encodeURIComponent(url), { signal: controller.signal });
+      const timer = setTimeout(() => controller.abort(), 12000);
+      const fullUrl = cfg.prefix + (cfg.encode ? encodeURIComponent(url) : url);
+      const response = await fetch(fullUrl, { signal: controller.signal });
       clearTimeout(timer);
-      if (response.ok) return await response.text();
+      if (!response.ok) continue;
+
+      if (cfg.parse === 'allorigins') {
+        // allorigins /get 엔드포인트는 JSON { contents: "...", status: {...} } 반환
+        const json = await response.json();
+        if (json && json.contents && json.contents.length > 100) return json.contents;
+      } else {
+        const text = await response.text();
+        if (text && text.length > 100) return text;
+      }
     } catch (e) { continue; }
   }
-  throw new Error('모든 프록시 연결에 실패했습니다. 직접 내용을 입력해주세요.');
+  throw new Error('모든 프록시 연결에 실패했습니다.\n\n블로그 내용을 직접 복사해서 입력해주세요.\n(우측 상단 열기 버튼으로 블로그를 열 수 있어요)');
 }
 
 function parseBlogContent(html) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  const selectors = ['.se-main-container', '.se_component_wrap', '.post-view', '#postViewArea', '.blog-post'];
+
+  // 최신 네이버 블로그 셀렉터 (우선순위 순)
+  const selectors = [
+    '.se-main-container',     // 스마트에디터 3 (현재 주력)
+    '.se_component_wrap',     // 스마트에디터 2
+    '#postViewArea',          // 구버전 직접뷰
+    '.post-view',
+    '.post_ct',
+    '#viewTypeSelector',
+    '.blog_view',
+    'article'
+  ];
+
   for (const sel of selectors) {
     const el = doc.querySelector(sel);
-    if (el) return el.innerText.replace(/\s+/g, ' ').trim().substring(0, 3000);
+    if (el) {
+      // innerText 대신 textContent 사용 (DOMParser 호환)
+      const text = el.textContent.replace(/\s+/g, ' ').trim();
+      if (text.length > 100) return text.substring(0, 3000);
+    }
   }
-  return (doc.body && doc.body.innerText) ? doc.body.innerText.replace(/\s+/g, ' ').trim().substring(0, 3000) : null;
+
+  // 셀렉터 실패 시 → 정규식으로 HTML 태그 제거 후 추출
+  const stripped = html.replace(/<style[\s\S]*?<\/style>/gi, '')
+                       .replace(/<script[\s\S]*?<\/script>/gi, '')
+                       .replace(/<[^>]+>/g, ' ')
+                       .replace(/\s+/g, ' ')
+                       .trim();
+  if (stripped.length > 100) return stripped.substring(0, 3000);
+
+  return null;
 }
 
 function extractBlogUrlsFromSearch(html) {
@@ -828,6 +917,12 @@ function openNaverSearch() {
   const name = document.getElementById('storeName').value.trim() || document.getElementById('mainKeyword').value.trim();
   if (name) window.open('https://search.naver.com/search.naver?where=post&query=' + encodeURIComponent(name), '_blank');
   else alert('매장명 또는 메인 키워드를 먼저 입력해주세요.');
+}
+
+function openBlogUrl(num) {
+  const url = document.getElementById('blogUrl' + num).value.trim();
+  if (url) window.open(url, '_blank');
+  else alert('블로그 URL을 먼저 입력해주세요.');
 }
 
 async function autoCollectBlogPosts() {
@@ -847,14 +942,24 @@ async function autoCollectBlogPosts() {
     const urls = extractBlogUrlsFromSearch(html);
     if (urls.length === 0) throw new Error('블로그를 찾지 못했습니다. 우측 상단 버튼으로 직접 검색해주세요.');
 
+    let successCount = 0;
     for (let i = 0; i < Math.min(urls.length, 3); i++) {
       document.getElementById('blogUrl' + (i + 1)).value = urls[i];
-      try { await crawlBlogToTextareaInternal(i + 1, urls[i]); }
-      catch (e) { document.getElementById('reference' + (i + 1)).value = '수집 실패 - 직접 입력해주세요.'; }
+      try {
+        await crawlBlogToTextareaInternal(i + 1, urls[i]);
+        const val = document.getElementById('reference' + (i + 1)).value;
+        if (val && !val.includes('실패')) successCount++;
+      } catch (e) {
+        document.getElementById('reference' + (i + 1)).value = '수집 실패 - 옆 열기 버튼으로 블로그를 열어 내용을 직접 붙여넣으세요.';
+      }
     }
-    alert('자동 수집 완료! ' + Math.min(urls.length, 3) + '개 블로그를 수집했습니다.');
+    if (successCount > 0) {
+      alert('수집 완료! ' + successCount + '개 성공. 실패한 항목은 열기 버튼으로 직접 복사해주세요.');
+    } else {
+      alert('자동 수집이 어렵습니다.\n\n각 탭의 열기(↗) 버튼으로 블로그를 열어\n본문 내용을 직접 붙여넣어 주세요.');
+    }
   } catch (error) {
-    alert('자동 수집 실패: ' + error.message);
+    alert('블로그 URL 검색 실패.\n\n네이버 검색(↗)에서 블로그 URL을 직접 복사해 입력해주세요.');
   } finally {
     btn.innerHTML = origHTML;
     btn.disabled = false;
@@ -862,10 +967,36 @@ async function autoCollectBlogPosts() {
 }
 
 async function crawlBlogToTextareaInternal(num, url) {
-  const targetUrl = url.replace('blog.naver.com/', 'm.blog.naver.com/');
-  const html = await fetchWithProxy(targetUrl);
-  const content = parseBlogContent(html);
-  document.getElementById('reference' + num).value = content || '내용 추출 실패 - 직접 입력해주세요.';
+  // 시도할 URL 목록 (성공률 높은 순서)
+  const targets = [];
+
+  // 1) 모바일 버전 (가장 잘 됨)
+  if (!url.includes('m.blog.naver.com')) {
+    targets.push(url.replace('blog.naver.com/', 'm.blog.naver.com/'));
+  }
+
+  // 2) blogId + logNo 방식 (직접 PostView)
+  const m = url.match(/blog\.naver\.com\/([^\/\?]+)\/(\d+)/);
+  if (m) {
+    targets.push('https://blog.naver.com/PostView.naver?blogId=' + m[1] + '&logNo=' + m[2] + '&redirect=Dlog&widgetTypeCall=true');
+    targets.push('https://m.blog.naver.com/PostView.naver?blogId=' + m[1] + '&logNo=' + m[2]);
+  }
+
+  // 3) 원본 URL 그대로
+  targets.push(url);
+
+  for (const targetUrl of targets) {
+    try {
+      const html = await fetchWithProxy(targetUrl);
+      const content = parseBlogContent(html);
+      if (content && content.length > 100) {
+        document.getElementById('reference' + num).value = content;
+        return;
+      }
+    } catch (e) { continue; }
+  }
+
+  document.getElementById('reference' + num).value = '내용 추출 실패 - 직접 입력해주세요.';
 }
 
 async function crawlBlogToTextarea(num) {
