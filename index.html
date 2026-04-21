@@ -199,6 +199,30 @@
         </div>
       </div>
     </section>
+    <!-- 디버그 패널 -->
+    <section id="debugSection" class="hidden">
+      <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <button onclick="toggleDebug()" class="w-full flex items-center justify-between px-4 py-3 bg-slate-100 dark:bg-slate-800 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">bug_report</span>
+            디버그 로그
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="debugBadge" class="text-xs px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 hidden">오류</span>
+            <span id="debugToggleIcon" class="material-symbols-outlined text-base">expand_more</span>
+          </div>
+        </button>
+        <div id="debugBody" class="hidden">
+          <div class="flex justify-end px-3 pt-2">
+            <button onclick="clearDebugLog()" class="text-xs text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">delete</span>로그 지우기
+            </button>
+          </div>
+          <div id="debugLog" class="px-3 pb-3 space-y-1 max-h-64 overflow-y-auto custom-scrollbar font-mono text-xs"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="pt-2">
       <button onclick="generateTitles()" id="generateTitlesBtn" class="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[0.98] active:scale-95 transition-transform flex items-center justify-center gap-2">
         <span class="material-symbols-outlined">magic_button</span>
@@ -842,29 +866,97 @@ function switchTab(btn, tabId) {
 }
 
 // ============================================================
+// 디버그 로그
+// ============================================================
+const DEBUG_COLORS = { info: '#60a5fa', ok: '#34d399', fail: '#f87171', warn: '#fbbf24' };
+
+function debugLog(type, msg) {
+  const panel = document.getElementById('debugSection');
+  const log = document.getElementById('debugLog');
+  if (!panel || !log) return;
+
+  panel.classList.remove('hidden');
+
+  const now = new Date();
+  const time = now.toTimeString().substring(0, 8);
+  const color = DEBUG_COLORS[type] || '#94a3b8';
+  const icons = { info: '→', ok: '✓', fail: '✗', warn: '!' };
+  const icon = icons[type] || '·';
+
+  const line = document.createElement('div');
+  line.className = 'flex gap-2 py-0.5 border-b border-slate-100 dark:border-slate-800/50';
+  line.innerHTML =
+    '<span class="text-slate-400 shrink-0">' + time + '</span>' +
+    '<span class="shrink-0 font-bold" style="color:' + color + '">' + icon + '</span>' +
+    '<span class="break-all" style="color:' + color + '">' + msg + '</span>';
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+
+  if (type === 'fail') {
+    document.getElementById('debugBadge').classList.remove('hidden');
+  }
+}
+
+function toggleDebug() {
+  const body = document.getElementById('debugBody');
+  const icon = document.getElementById('debugToggleIcon');
+  const isHidden = body.classList.toggle('hidden');
+  icon.textContent = isHidden ? 'expand_more' : 'expand_less';
+}
+
+function clearDebugLog() {
+  const log = document.getElementById('debugLog');
+  if (log) log.innerHTML = '';
+  document.getElementById('debugBadge').classList.add('hidden');
+}
+
+// ============================================================
 // 블로그 크롤링
 // ============================================================
 async function fetchWithProxy(url) {
+  debugLog('info', '요청 URL: ' + url);
+
   for (const cfg of CORS_PROXY_CONFIGS) {
+    const proxyName = cfg.prefix.replace('https://', '').split('/')[0];
+    const fullUrl = cfg.prefix + (cfg.encode ? encodeURIComponent(url) : url);
+    debugLog('info', '[' + proxyName + '] 시도 중...');
+
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 12000);
-      const fullUrl = cfg.prefix + (cfg.encode ? encodeURIComponent(url) : url);
       const response = await fetch(fullUrl, { signal: controller.signal });
       clearTimeout(timer);
-      if (!response.ok) continue;
+
+      if (!response.ok) {
+        debugLog('fail', '[' + proxyName + '] HTTP ' + response.status + ' ' + response.statusText);
+        continue;
+      }
 
       if (cfg.parse === 'allorigins') {
-        // allorigins /get 엔드포인트는 JSON { contents: "...", status: {...} } 반환
         const json = await response.json();
-        if (json && json.contents && json.contents.length > 100) return json.contents;
+        if (json && json.contents && json.contents.length > 100) {
+          debugLog('ok', '[' + proxyName + '] 성공 (' + json.contents.length + '자)');
+          return json.contents;
+        } else {
+          debugLog('warn', '[' + proxyName + '] 응답 있으나 내용 없음 (status: ' + (json && json.status && json.status.http_code) + ')');
+        }
       } else {
         const text = await response.text();
-        if (text && text.length > 100) return text;
+        if (text && text.length > 100) {
+          debugLog('ok', '[' + proxyName + '] 성공 (' + text.length + '자)');
+          return text;
+        } else {
+          debugLog('warn', '[' + proxyName + '] 응답 있으나 내용 부족 (' + (text ? text.length : 0) + '자)');
+        }
       }
-    } catch (e) { continue; }
+    } catch (e) {
+      const errMsg = e.name === 'AbortError' ? '타임아웃(12초 초과)' : e.message;
+      debugLog('fail', '[' + proxyName + '] ' + errMsg);
+    }
   }
-  throw new Error('모든 프록시 연결에 실패했습니다.\n\n블로그 내용을 직접 복사해서 입력해주세요.\n(우측 상단 열기 버튼으로 블로그를 열 수 있어요)');
+
+  debugLog('fail', '모든 프록시 실패 → 직접 입력 필요');
+  throw new Error('모든 프록시 연결에 실패했습니다.\n\n블로그 내용을 직접 복사해서 입력해주세요.\n(열기 버튼으로 블로그를 열 수 있어요)');
 }
 
 function parseBlogContent(html) {
@@ -937,9 +1029,12 @@ async function autoCollectBlogPosts() {
   btn.disabled = true;
 
   try {
+    clearDebugLog();
+    debugLog('info', '=== 자동 수집 시작: "' + query + '" ===');
     const searchUrl = 'https://search.naver.com/search.naver?where=post&query=' + encodeURIComponent(query);
     const html = await fetchWithProxy(searchUrl);
     const urls = extractBlogUrlsFromSearch(html);
+    debugLog(urls.length > 0 ? 'ok' : 'fail', '검색 결과 URL 추출: ' + urls.length + '개');
     if (urls.length === 0) throw new Error('블로그를 찾지 못했습니다. 우측 상단 버튼으로 직접 검색해주세요.');
 
     let successCount = 0;
@@ -967,35 +1062,40 @@ async function autoCollectBlogPosts() {
 }
 
 async function crawlBlogToTextareaInternal(num, url) {
-  // 시도할 URL 목록 (성공률 높은 순서)
+  debugLog('info', '=== 블로그 ' + num + ' 수집 시작 ===');
   const targets = [];
 
-  // 1) 모바일 버전 (가장 잘 됨)
   if (!url.includes('m.blog.naver.com')) {
     targets.push(url.replace('blog.naver.com/', 'm.blog.naver.com/'));
   }
-
-  // 2) blogId + logNo 방식 (직접 PostView)
   const m = url.match(/blog\.naver\.com\/([^\/\?]+)\/(\d+)/);
   if (m) {
     targets.push('https://blog.naver.com/PostView.naver?blogId=' + m[1] + '&logNo=' + m[2] + '&redirect=Dlog&widgetTypeCall=true');
     targets.push('https://m.blog.naver.com/PostView.naver?blogId=' + m[1] + '&logNo=' + m[2]);
   }
-
-  // 3) 원본 URL 그대로
   targets.push(url);
 
-  for (const targetUrl of targets) {
+  debugLog('info', '시도할 URL 형식: ' + targets.length + '개');
+
+  for (let i = 0; i < targets.length; i++) {
+    const targetUrl = targets[i];
+    debugLog('info', 'URL 형식 ' + (i+1) + ': ' + targetUrl.substring(0, 60) + '...');
     try {
       const html = await fetchWithProxy(targetUrl);
       const content = parseBlogContent(html);
       if (content && content.length > 100) {
+        debugLog('ok', '본문 파싱 성공 (' + content.length + '자) → 블로그 ' + num + ' 저장 완료');
         document.getElementById('reference' + num).value = content;
         return;
+      } else {
+        debugLog('warn', '프록시 응답 OK지만 본문 파싱 실패 (셀렉터 미매칭)');
       }
-    } catch (e) { continue; }
+    } catch (e) {
+      debugLog('fail', 'URL형식 ' + (i+1) + ' 실패: ' + e.message.split('\n')[0]);
+    }
   }
 
+  debugLog('fail', '블로그 ' + num + ' 모든 시도 실패');
   document.getElementById('reference' + num).value = '내용 추출 실패 - 직접 입력해주세요.';
 }
 
@@ -1009,9 +1109,11 @@ async function crawlBlogToTextarea(num) {
   btn.disabled = true;
 
   try {
+    clearDebugLog();
+    debugLog('info', '=== 블로그 ' + num + ' 수동 수집 시작 ===');
     await crawlBlogToTextareaInternal(num, url);
   } catch (e) {
-    alert('수집 실패: ' + e.message);
+    debugLog('fail', '수집 오류: ' + e.message.split('\n')[0]);
   } finally {
     btn.innerHTML = origHTML;
     btn.disabled = false;
