@@ -997,11 +997,67 @@ function parseBlogContent(html) {
 
 function extractBlogUrlsFromSearch(html) {
   const urls = [];
-  const matches = html.matchAll(/https?:\/\/blog\.naver\.com\/[^\/\s"'<>]+\/\d+/g);
-  for (const match of matches) {
-    if (!urls.includes(match[0])) urls.push(match[0]);
+  debugLog('info', 'HTML 크기: ' + html.length + '자');
+
+  // ★ 핵심: 네이버는 JSON 내 URL을 /(=/)로 유니코드 이스케이프 처리함
+  // 언이스케이프 후 패턴 검색
+  const unescaped = html
+    .replace(/\\u002[Ff]/g, '/')   // / → /
+    .replace(/\\u003[Aa]/g, ':')   // : → :
+    .replace(/\\\/\//g, '//')      // \/\/ → //
+    .replace(/\\\//g, '/');        // \/ → /
+
+  const hasBlogNaver = unescaped.includes('blog.naver.com');
+  debugLog('info', '언이스케이프 후 blog.naver.com 존재: ' + hasBlogNaver);
+
+  const patterns = [
+    // 일반 URL 형식
+    /https?:\/\/blog\.naver\.com\/([A-Za-z0-9_\-\.]+)\/(\d+)/g,
+    // 모바일 URL 형식
+    /https?:\/\/m\.blog\.naver\.com\/([A-Za-z0-9_\-\.]+)\/(\d+)/g,
+    // href 속성
+    /href=["']([^"']*blog\.naver\.com\/[A-Za-z0-9_\-\.]+\/\d+)[^"']*["']/g,
+    // JSON link/url 필드
+    /"(?:link|url|blogUrl|canonicalUrl)"\s*:\s*"([^"]*blog\.naver\.com[^"]*\/\d+[^"]*)"/g,
+    // PostView 형식
+    /PostView\.naver\?blogId=([A-Za-z0-9_\-\.]+)&(?:amp;)?logNo=(\d+)/g,
+  ];
+
+  for (let pi = 0; pi < patterns.length; pi++) {
+    const matches = [...unescaped.matchAll(patterns[pi])];
+    debugLog('info', '패턴 ' + (pi+1) + ' 매칭: ' + matches.length + '개');
+
+    for (const match of matches) {
+      let url;
+      if (pi === 4) {
+        url = 'https://blog.naver.com/' + match[1] + '/' + match[2];
+      } else if (match[1] && !match[1].startsWith('http') && match[2]) {
+        url = 'https://blog.naver.com/' + match[1] + '/' + match[2];
+      } else {
+        url = (match[1] && match[1].startsWith('http')) ? match[1] : match[0];
+      }
+      url = url.replace('m.blog.naver.com/', 'blog.naver.com/').split('?')[0];
+
+      if (url.match(/blog\.naver\.com\/[^\/]+\/\d+$/) && !urls.includes(url)) {
+        urls.push(url);
+        debugLog('ok', 'URL 추출: ' + url);
+      }
+      if (urls.length >= 3) return urls;
+    }
     if (urls.length >= 3) break;
   }
+
+  // 실패 시 샘플 출력 (언이스케이프 후 기준)
+  if (urls.length === 0) {
+    const lines = unescaped.split('\n').filter(l => l.includes('blog.naver.com'));
+    if (lines.length > 0) {
+      debugLog('warn', 'blog.naver.com 포함 줄 ' + lines.length + '개 발견, 샘플:');
+      lines.slice(0, 2).forEach((l, i) => debugLog('warn', '[' + i + '] ' + l.trim().substring(0, 200)));
+    } else {
+      debugLog('fail', 'blog.naver.com 문자열 없음 → 프록시가 다른 페이지 반환 또는 JS 렌더링 필요');
+    }
+  }
+
   return urls;
 }
 
